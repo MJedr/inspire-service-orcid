@@ -1,0 +1,7 @@
+# Create a file settings.local.py to add special settings for the orcid client.
+# This file will be ignored by git.
+
+settings_local = dict(
+    CONSUMER_SECRET='qasecret',
+    OAUTH_TOKEN='validtoken',
+)

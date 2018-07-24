@@ -2,10 +2,13 @@ pkgversion
 tox
 isort
 flake8
+six
+mock
 
 # PyTest for running the tests.
 pytest
 pytest-cov
+pytest-vcr
 
 # docs
 sphinx

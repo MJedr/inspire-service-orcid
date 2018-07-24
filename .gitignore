@@ -170,3 +170,7 @@ target/
 Session.vim
 .netrwhist
 *~
+
+
+# Local settings file.
+settings_local.py
