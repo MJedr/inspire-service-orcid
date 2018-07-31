@@ -80,3 +80,30 @@ class OrcidClient(object):
         except HTTPError as exc:
             response = exc.response
         return models.PostNewWorkResponse(self.memberapi, response)
+
+    def put_updated_work(self, xml_element, putcode):
+        """
+        Update en existent work.
+        PUT https://api.orcid.org/v2.0/0000-0002-0942-3697/work/46985330
+
+        Args:
+            xml_element (lxml.etree._Element): work data in xml format.
+            putcode (string): work's putcode.
+        """
+        if not putcode:
+            raise ValueError('pucodes cannot be an empty sequence')
+        if xml_element is None:
+            raise ValueError('xml_element cannot be None')
+
+        try:
+            response = self.memberapi.update_record(
+                orcid_id=self.orcid,
+                token=self.oauth_token,
+                request_type='work',
+                data=xml_element,
+                put_code=putcode,
+                content_type=self.accept_xml,
+            )
+        except HTTPError as exc:
+            response = exc.response
+        return models.PutUpdatedWorkResponse(self.memberapi, response)

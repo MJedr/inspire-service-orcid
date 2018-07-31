@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: !!python/unicode '<root><child1/></root>'
+    headers:
+      Accept: [application/orcid+json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['22']
+      Content-Type: [application/orcid+xml]
+    method: POST
+    uri: https://api.orcid.org/v2.0/0000-0002-0942-3697/work
+  response:
+    body: {string: !!python/unicode '{"response-code":400,"developer-message":"400
+        Bad Request: There is an issue with your data or the API endpoint. 405 Method
+        Not Allowed: Endpoint and method mismatch. 415 Unsupported Media Type: data
+        must be in XML or JSON format. Full validation error: javax.xml.bind.UnmarshalException\n
+        - with linked exception:\n[org.xml.sax.SAXParseException; lineNumber: 1; columnNumber:
+        7; cvc-elt.1.a: Cannot find the declaration of element ''root''.] (cvc-elt.1.a:
+        Cannot find the declaration of element ''root''.)","user-message":"ORCID could
+        not process the data, because they were invalid.","error-code":9001,"more-info":"https://members.orcid.org/api/resources/troubleshooting"}'}
+    headers:
+      access-control-allow-origin: ['*']
+      cache-control: ['no-cache, no-store, max-age=0, must-revalidate']
+      connection: [keep-alive]
+      content-length: ['670']
+      content-type: [application/orcid+json; qs=2;charset=UTF-8]
+      date: ['Tue, 31 Jul 2018 12:54:51 GMT']
+      expires: ['0']
+      pragma: [no-cache]
+      server: [nginx/1.4.6 (Ubuntu)]
+      x-content-type-options: [nosniff]
+      x-frame-options: [DENY]
+      x-xss-protection: [1; mode=block]
+    status: {code: 400, message: Bad Request}
+version: 1

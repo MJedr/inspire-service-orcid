@@ -127,7 +127,7 @@ class GetWorksDetailsResponse(BaseOrcidClientResponse):
     """  # noqa: E501
     specific_exceptions = (exceptions.OrcidInvalidException,
                            exceptions.ExceedMaxNumberOfPutCodesException,
-                           exceptions.PutcodeNotFoundException,
+                           exceptions.PutcodeNotFoundGetException,
                            exceptions.GenericGetWorksDetailsException,)
 
 
@@ -148,3 +148,51 @@ class PostNewWorkResponse(BaseOrcidClientResponse):
         except (KeyError, AttributeError):
             data = response
         super(PostNewWorkResponse, self).__init__(memberapi, data)
+
+
+class PutUpdatedWorkResponse(BaseOrcidClientResponse):
+    """
+    A dict-like object as:
+    {u'citation': None,
+     u'contributors': {u'contributor': [{u'contributor-attributes': {u'contributor-role': u'AUTHOR',
+                                                                     u'contributor-sequence': u'FIRST'},
+                                         u'contributor-email': None,
+                                         u'contributor-orcid': None,
+                                         u'credit-name': {u'value': u'Rossoni, A.'}}]},
+     u'country': None,
+     u'created-date': {u'value': 1533027211637},
+     u'external-ids': {u'external-id': [{u'external-id-relationship': u'SELF',
+                                         u'external-id-type': u'doi',
+                                         u'external-id-url': {u'value': u'http://dx.doi.org/10.1000/test.orcid.push'},
+                                         u'external-id-value': u'10.1000/test.orcid.push'}]},
+     u'journal-title': {u'value': u'ORCID Push test'},
+     u'language-code': None,
+     u'last-modified-date': {u'value': 1533027422266},
+     u'path': None,
+     u'publication-date': {u'day': None,
+                           u'media-type': None,
+                           u'month': None,
+                           u'year': {u'value': u'1975'}},
+     u'put-code': 46985330,
+     u'short-description': None,
+     u'source': {u'source-client-id': {u'host': u'orcid.org',
+                                       u'path': u'0000-0001-8607-8906',
+                                       u'uri': u'http://orcid.org/client/0000-0001-8607-8906'},
+                 u'source-name': {u'value': u'INSPIRE-HEP'},
+                 u'source-orcid': None},
+     u'title': {u'subtitle': None,
+                u'title': {u'value': u'ORCID Push test - New Title'},
+                u'translated-title': None},
+     u'type': u'JOURNAL_ARTICLE',
+     u'url': {u'value': u'http://inspirehep.net/record/8201'},
+     u'visibility': u'PUBLIC'}
+    """
+    specific_exceptions = (exceptions.OrcidNotFoundException,
+                           exceptions.PutcodeNotFoundPutException,)
+
+    def __init__(self, memberapi, response):
+        try:
+            data = memberapi.raw_response.json()
+        except AttributeError:
+            data = response
+        super(PutUpdatedWorkResponse, self).__init__(memberapi, data)

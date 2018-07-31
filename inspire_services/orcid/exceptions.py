@@ -30,6 +30,13 @@ class OrcidNotFoundException(BaseOrcidClientJsonException):
         'error-code': 9016
     }
 
+    @classmethod
+    def match(cls, response):
+        if not super(OrcidNotFoundException, cls).match(response):
+            return False
+
+        return 'INVALID-ORCID' in response['developer-message'].upper()
+
 
 class OrcidInvalidException(BaseOrcidClientJsonException):
     http_status_code = 500
@@ -53,7 +60,7 @@ class GenericGetWorksDetailsException(BaseOrcidClientJsonException):
         return False
 
 
-class PutcodeNotFoundException(BaseOrcidClientJsonException):
+class PutcodeNotFoundGetException(BaseOrcidClientJsonException):
     http_status_code = 200
 
     @classmethod
@@ -66,6 +73,13 @@ class PutcodeNotFoundException(BaseOrcidClientJsonException):
             if work.get('error', {}).get('error-code', None) == 9034:
                 return True
         return False
+
+
+class PutcodeNotFoundPutException(BaseOrcidClientJsonException):
+    http_status_code = 404
+    content = {
+        'error-code': 9016
+    }
 
 
 class ExceedMaxNumberOfPutCodesException(BaseOrcidClientJsonException):

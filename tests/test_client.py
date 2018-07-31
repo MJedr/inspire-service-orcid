@@ -65,7 +65,7 @@ class TestGetWorksDetails(BaseTestOrcidClient):
 
     def test_putcode_not_found(self):
         response = self.client.get_works_details(['xxx', self.putcodes[0]])
-        with pytest.raises(exceptions.PutcodeNotFoundException):
+        with pytest.raises(exceptions.PutcodeNotFoundGetException):
             response.raise_for_result()
 
     def test_missing_putcode(self):
@@ -153,6 +153,79 @@ class TestPostNewWork(BaseTestOrcidClient):
     def test_invalid_orcid(self):
         self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
         response = self.client.post_new_work(self.xml_element)
+        with pytest.raises(exceptions.OrcidNotFoundException):
+            response.raise_for_result()
+        assert not response.ok
+
+
+class TestPutUpdatedWork(BaseTestOrcidClient):
+    new_title = 'ORCID Push test - New Title'
+    work_xml_data = """<?xml version="1.0" encoding="UTF-8"?>
+    <work:work xmlns:work="http://www.orcid.org/ns/work" xmlns:common="http://www.orcid.org/ns/common">
+        <work:title>
+            <common:title>{}</common:title>
+        </work:title>
+        <work:journal-title>ORCID Push test</work:journal-title>
+        <work:type>journal-article</work:type>
+        <common:publication-date>
+            <common:year>1975</common:year>
+        </common:publication-date>
+        <common:external-ids>
+            <common:external-id>
+                <common:external-id-type>doi</common:external-id-type>
+                <common:external-id-value>10.1000/test.orcid.push</common:external-id-value>
+                <common:external-id-url>http://dx.doi.org/10.1000/test.orcid.push</common:external-id-url>
+                <common:external-id-relationship>self</common:external-id-relationship>
+            </common:external-id>
+        </common:external-ids>
+        <work:url>http://inspirehep.net/record/8201</work:url>
+        <work:contributors>
+            <work:contributor>
+                <work:credit-name>Rossoni, A.</work:credit-name>
+                <work:contributor-attributes>
+                    <work:contributor-sequence>first</work:contributor-sequence>
+                    <work:contributor-role>author</work:contributor-role>
+                </work:contributor-attributes>
+            </work:contributor>
+        </work:contributors>
+    </work:work>
+    """.format(new_title)
+
+    def setup(self):
+        super(TestPutUpdatedWork, self).setup()
+        self.xml_element = etree.fromstring(self.work_xml_data.encode('utf-8'))
+        self.putcode = '46985330'
+
+    def test_happy_flow(self):
+        response = self.client.put_updated_work(self.xml_element, self.putcode)
+        response.raise_for_result()
+        assert response.ok
+        assert response['title']['title']['value'] == self.new_title
+
+    def test_putcode_not_found(self):
+        response = self.client.put_updated_work(self.xml_element, '77777330')
+        with pytest.raises(exceptions.PutcodeNotFoundPutException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_missing_xml_section(self):
+        root = etree.Element('root')
+        root.append(etree.Element('child1'))
+        response = self.client.post_new_work(root)
+        with pytest.raises(exceptions.InvalidDataException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_invalid_token(self):
+        self.client = OrcidClient('invalidtoken', self.orcid)
+        response = self.client.put_updated_work(self.xml_element, self.putcode)
+        with pytest.raises(exceptions.TokenInvalidException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_invalid_orcid(self):
+        self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
+        response = self.client.put_updated_work(self.xml_element, self.putcode)
         with pytest.raises(exceptions.OrcidNotFoundException):
             response.raise_for_result()
         assert not response.ok
