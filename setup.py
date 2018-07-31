@@ -2,7 +2,7 @@
 from setuptools import setup
 setup(**{'author': 'puntonim',
  'author_email': 'foo@gmail.com',
- 'classifiers': ['Development Status :: 3 - Alpha',
+ 'classifiers': ['Development Status :: 5 - Production/Stable',
                  'Environment :: Web Environment',
                  'Intended Audience :: Developers',
                  'Operating System :: OS Independent',
@@ -20,5 +20,5 @@ setup(**{'author': 'puntonim',
  'packages': ['inspire_services', 'inspire_services.orcid'],
  'tests_require': ['tox'],
  'url': 'https://github.com/puntonim/inspire-service-orcid',
- 'version': '0.0.1a4',
+ 'version': '1.0.0',
  'zip_safe': False})

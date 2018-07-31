@@ -5,7 +5,7 @@ from setuptools import find_packages
 
 write_setup_py(
     name='inspire-service-orcid',
-    version=pep440_version('0.0.1a4'),
+    version=pep440_version('1.0.0'),
     description="ORCID service client",
     long_description=open('README.md').read(),
     author='puntonim',
@@ -17,7 +17,7 @@ write_setup_py(
     include_package_data=True,
     zip_safe=False,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
