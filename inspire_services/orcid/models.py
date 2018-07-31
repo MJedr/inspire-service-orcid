@@ -124,11 +124,27 @@ class GetWorksDetailsResponse(BaseOrcidClientResponse):
                         'type': 'JOURNAL_ARTICLE',
                         'url': {'value': 'http://labs.inspirehep.net/record/4328'},
                         'visibility': 'PUBLIC'}}]}
-
-    Args:
-        putcodes (List[string]): list of all putcodes.
     """  # noqa: E501
     specific_exceptions = (exceptions.OrcidInvalidException,
                            exceptions.ExceedMaxNumberOfPutCodesException,
                            exceptions.PutcodeNotFoundException,
                            exceptions.GenericGetWorksDetailsException,)
+
+
+class PostNewWorkResponse(BaseOrcidClientResponse):
+    """
+    A dict-like object as:
+    {'location': 'http://api.orcid.org/orcid-api-web/v2.0/0000-0002-0942-3697/work/46874897'}
+    """
+    specific_exceptions = (exceptions.WorkAlreadyExistentException,
+                           exceptions.InvalidDataException,
+                           exceptions.OrcidNotFoundException,)
+
+    def __init__(self, memberapi, response):
+        try:
+            data = dict(
+                location=memberapi.raw_response.headers['location']
+            )
+        except (KeyError, AttributeError):
+            data = response
+        super(PostNewWorkResponse, self).__init__(memberapi, data)

@@ -8,6 +8,9 @@ from . import models
 
 
 class OrcidClient(object):
+    accept_json = 'application/orcid+json'
+    accept_xml = 'application/orcid+xml'
+
     def __init__(self, oauth_token, orcid):
         self.oauth_token = oauth_token
         self.orcid = orcid
@@ -25,10 +28,10 @@ class OrcidClient(object):
         """
         try:
             response = self.memberapi.read_record_member(
-                self.orcid,
-                'works',
-                self.oauth_token,
-                accept_type='application/orcid+json',
+                orcid_id=self.orcid,
+                request_type='works',
+                token=self.oauth_token,
+                accept_type=self.accept_json,
             )
         except HTTPError as exc:
             response = exc.response
@@ -38,17 +41,42 @@ class OrcidClient(object):
         """
         Get a summary of all works for the given orcid.
         GET https://api.orcid.org/v2.0/0000-0002-0942-3697/works/46674246,46694033
+
+        Args:
+            putcodes (List[string]): list of all putcodes.
         """
         if not putcodes:
             raise ValueError('pucodes cannot be an empty sequence')
         try:
             response = self.memberapi.read_record_member(
-                self.orcid,
-                'works',
-                self.oauth_token,
-                accept_type='application/orcid+json',
+                orcid_id=self.orcid,
+                request_type='works',
+                token=self.oauth_token,
+                accept_type=self.accept_json,
                 put_code=putcodes,
             )
         except HTTPError as exc:
             response = exc.response
         return models.GetWorksDetailsResponse(self.memberapi, response)
+
+    def post_new_work(self, xml_element):
+        """
+        Create a new work for the given orcid and with the given xml data.
+        POST https://api.orcid.org/v2.0/0000-0002-0942-3697/work
+
+        Args:
+            xml_element (lxml.etree._Element): work data in xml format.
+        """
+        if xml_element is None:
+            raise ValueError('xml_element cannot be None')
+        try:
+            response = self.memberapi.add_record(
+                orcid_id=self.orcid,
+                token=self.oauth_token,
+                request_type='work',
+                data=xml_element,
+                content_type=self.accept_xml,
+            )
+        except HTTPError as exc:
+            response = exc.response
+        return models.PostNewWorkResponse(self.memberapi, response)

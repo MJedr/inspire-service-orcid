@@ -73,3 +73,17 @@ class ExceedMaxNumberOfPutCodesException(BaseOrcidClientJsonException):
     content = {
         'error-code': 9042
     }
+
+
+class WorkAlreadyExistentException(BaseOrcidClientJsonException):
+    http_status_code = 409
+    content = {
+        'error-code': 9021
+    }
+
+
+class InvalidDataException(BaseOrcidClientJsonException):
+    http_status_code = 400
+    content = {
+        'error-code': 9001
+    }
