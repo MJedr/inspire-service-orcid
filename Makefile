@@ -24,6 +24,7 @@ pyclean:
 clean: pyclean
 	@rm -rf venv
 	@rm -rf .tox
+	@rm -rf dist
 
 venv:
 	@virtualenv venv
