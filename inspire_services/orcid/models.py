@@ -143,7 +143,8 @@ class PostNewWorkResponse(BaseOrcidClientResponse):
     def __init__(self, memberapi, response):
         try:
             data = dict(
-                location=memberapi.raw_response.headers['location']
+                location=memberapi.raw_response.headers['location'],
+                putcode=response,
             )
         except (KeyError, AttributeError):
             data = response

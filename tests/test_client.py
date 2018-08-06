@@ -128,6 +128,7 @@ class TestPostNewWork(BaseTestOrcidClient):
         response.raise_for_result()
         assert response.ok
         assert response['location'] == 'http://api.orcid.org/orcid-api-web/v2.0/0000-0002-0942-3697/work/46964761'
+        assert response['putcode'] == '46964761'
 
     def test_already_existent_work(self):
         response = self.client.post_new_work(self.xml_element)
