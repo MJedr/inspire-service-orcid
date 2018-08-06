@@ -40,16 +40,21 @@ def vcr_config():
         'decode_compressed_response': True,
         'filter_headers': ('Authorization', 'User-Agent'),
         'record_mode': record_mode,
+        # 'ignore_hosts': ('localhost',),
 
     }
 
 
+# NOTE: a desired side effect of this auto-used fixture is that VCR is used
+# in all tests, no need to mark them with: @pytest.mark.vcr()
+# This effect is desired to avoid any network interaction apart from those
+# to the listed in vcr_config > ignore_hosts.
 @pytest.fixture(autouse=True, scope='function')
 def assert_all_played(request, vcr_cassette):
     """
     Ensure that all all episodes have been played in the current test.
-    Only if the current test is marked with: @pytest.mark.vcr()
+    Only if the current test has a cassette.
     """
     yield
-    if IS_VCR_ENABLED and IS_VCR_EPISODE_OR_ERROR and request.node.get_marker('vcr'):
+    if IS_VCR_ENABLED and IS_VCR_EPISODE_OR_ERROR and vcr_cassette:
         assert vcr_cassette.all_played
