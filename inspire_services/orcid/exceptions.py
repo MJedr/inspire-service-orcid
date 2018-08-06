@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 
 class BaseOrcidClientJsonException(Exception):
@@ -35,7 +36,7 @@ class OrcidNotFoundException(BaseOrcidClientJsonException):
         if not super(OrcidNotFoundException, cls).match(response):
             return False
 
-        return 'INVALID-ORCID' in response['developer-message'].upper()
+        return re.search(r'ORCID iD .* not found', response['developer-message'], re.I)
 
 
 class OrcidInvalidException(BaseOrcidClientJsonException):
