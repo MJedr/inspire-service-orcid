@@ -46,7 +46,7 @@ $ tox -e py27 -- tests/test_orcid.py  # tox against a specific Python version.
 $ pytest tests/test_orcid.py  # pytest against the active venv.
 ```
 
-To publish on PyPi:
+To publish on PyPi, first set the PyPi credentials:
 
 ```bash
 # Edit .pypirc:
@@ -54,9 +54,18 @@ $ cat $HOME/.pypirc
 [pypi]
 username: myuser
 password: mypass
+```
 
+```bash
 # Edit the version in `setup_gen.py`.
+# ... version=pep440_version('1.1.1'),
+# Then generate setup.py with:
+$ make setup.py
+# Commit, tag, push:
+$ git commit -m '1.1.1 release'
+$ git tag 1.1.1
+$ git push origin master --tags
 
-# Finally compile and publish:
+# Finally publish:
 $ make publish
 ```
