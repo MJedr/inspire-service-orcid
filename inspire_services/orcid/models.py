@@ -5,7 +5,8 @@ from . import exceptions
 
 
 class BaseOrcidClientResponse(dict):
-    base_exceptions = (exceptions.TokenInvalidException,)
+    base_exceptions = (exceptions.TokenInvalidException,
+                       exceptions.TokenMismatchException,)
 
     def __init__(self, memberapi, response):
         if isinstance(response, dict):

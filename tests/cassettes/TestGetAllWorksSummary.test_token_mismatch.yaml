@@ -1,0 +1,29 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: [application/orcid+json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+    method: GET
+    uri: https://api.orcid.org/v2.0/0000-0002-6665-4934/works
+  response:
+    body: {string: !!python/unicode '{"response-code":401,"developer-message":"401
+        Unauthorized: The client application is not authorized for this ORCID record.
+        Full validation error: Access token is for a different record","user-message":"The
+        client application is not authorized.","error-code":9017,"more-info":"https://members.orcid.org/api/resources/troubleshooting"}'}
+    headers:
+      access-control-allow-origin: ['*']
+      cache-control: ['no-cache, no-store, max-age=0, must-revalidate']
+      connection: [keep-alive]
+      content-length: ['334']
+      content-type: [application/orcid+json; qs=2;charset=UTF-8]
+      date: ['Tue, 07 Aug 2018 09:47:26 GMT']
+      expires: ['0']
+      pragma: [no-cache]
+      server: [nginx/1.4.6 (Ubuntu)]
+      x-content-type-options: [nosniff]
+      x-frame-options: [DENY]
+      x-xss-protection: [1; mode=block]
+    status: {code: 401, message: Unauthorized}
+version: 1

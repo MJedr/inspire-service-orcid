@@ -3,5 +3,7 @@
 
 settings_local = dict(
     CONSUMER_SECRET='qasecret',
-    OAUTH_TOKEN='validtoken',
+    OAUTH_TOKENS={
+        '0000-0002-0942-3697': 'validtoken',
+    }
 )

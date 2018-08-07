@@ -25,6 +25,13 @@ class TokenInvalidException(BaseOrcidClientJsonException):
     }
 
 
+class TokenMismatchException(BaseOrcidClientJsonException):
+    http_status_code = 401
+    content = {
+        'error-code': 9017
+    }
+
+
 class OrcidNotFoundException(BaseOrcidClientJsonException):
     http_status_code = 404
     content = {
