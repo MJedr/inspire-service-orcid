@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from itertools import chain
+
 from requests.models import Response
 
-from . import exceptions
+from . import exceptions, utils
 
 
 class BaseOrcidClientResponse(dict):
@@ -86,6 +88,19 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
      'path': '/0000-0002-0942-3697/works'}
     """  # noqa: E501
     specific_exceptions = (exceptions.OrcidNotFoundException,)
+
+    def get_putcodes_for_source(self, source_client_id_path):
+        putcodes = []
+        for summary in chain(*utils.get_value(self, 'group.work-summary', [])):
+            source_client_id_dict = utils.get_value(summary, 'source.source-client-id.path')
+            putcode = summary.get('put-code')
+
+            if not putcode or not source_client_id_dict:
+                continue
+
+            if source_client_id_dict == source_client_id_path:
+                putcodes.append(putcode)
+        return putcodes
 
 
 class GetWorksDetailsResponse(BaseOrcidClientResponse):

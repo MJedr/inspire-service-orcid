@@ -52,6 +52,18 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
             response.raise_for_result()
         assert not response.ok
 
+    def test_get_putcodes_for_source(self):
+        orcid = '0000-0002-6665-4934'  # ATLAS author with hundreds works.
+        oauth_token = inspire_services.orcid.conf.settings.OAUTH_TOKENS.get(orcid)
+
+        self.client = OrcidClient(oauth_token, orcid)
+        response = self.client.get_all_works_summary()
+        response.raise_for_result()
+        putcodes = response.get_putcodes_for_source('0000-0001-8607-8906')
+        assert len(putcodes) == 802
+        assert putcodes[0] == 43326850
+        assert putcodes[-1] == 46478640
+
 
 class TestGetWorksDetails(BaseTestOrcidClient):
     def test_single_putcode(self):
