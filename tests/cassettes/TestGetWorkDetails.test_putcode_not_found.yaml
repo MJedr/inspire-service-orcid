@@ -6,7 +6,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
     method: GET
-    uri: https://api.orcid.org/v2.0/0000-0002-0942-3697/works/xxx,46674246
+    uri: https://api.orcid.org/v2.0/0000-0002-0942-3697/works/xxx
   response:
     body: {string: !!python/unicode "{\n  \"bulk\" : [ {\n    \"error\" : {\n    \
         \  \"response-code\" : 400,\n      \"developer-message\" : \"400 Bad Request:\

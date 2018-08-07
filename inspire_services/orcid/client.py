@@ -37,27 +37,27 @@ class OrcidClient(object):
             response = exc.response
         return models.GetAllWorksSummaryResponse(self.memberapi, response)
 
-    def get_works_details(self, putcodes):
+    def get_work_details(self, putcode):
         """
-        Get a summary of all works for the given orcid.
-        GET https://api.orcid.org/v2.0/0000-0002-0942-3697/works/46674246,46694033
+        Get a summary of a work for the given orcid.
+        GET https://api.orcid.org/v2.0/0000-0002-0942-3697/works/46674246
 
         Args:
-            putcodes (List[string]): list of all putcodes.
+            putcode (string): putcode.
         """
-        if not putcodes:
-            raise ValueError('pucodes cannot be an empty sequence')
+        if not putcode:
+            raise ValueError('putcode required')
         try:
             response = self.memberapi.read_record_member(
                 orcid_id=self.orcid,
                 request_type='works',
                 token=self.oauth_token,
                 accept_type=self.accept_json,
-                put_code=putcodes,
+                put_code=[putcode],
             )
         except HTTPError as exc:
             response = exc.response
-        return models.GetWorksDetailsResponse(self.memberapi, response)
+        return models.GetWorkDetailsResponse(self.memberapi, response)
 
     def post_new_work(self, xml_element):
         """

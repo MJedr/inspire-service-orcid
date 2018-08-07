@@ -103,7 +103,7 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
         return putcodes
 
 
-class GetWorksDetailsResponse(BaseOrcidClientResponse):
+class GetWorkDetailsResponse(BaseOrcidClientResponse):
     """
     A dict-like object as:
     {'bulk': [{'work': {'citation': {'citation-type': 'BIBTEX',
@@ -142,7 +142,6 @@ class GetWorksDetailsResponse(BaseOrcidClientResponse):
                         'visibility': 'PUBLIC'}}]}
     """  # noqa: E501
     specific_exceptions = (exceptions.OrcidInvalidException,
-                           exceptions.ExceedMaxNumberOfPutCodesException,
                            exceptions.PutcodeNotFoundGetException,
                            exceptions.GenericGetWorksDetailsException,)
 

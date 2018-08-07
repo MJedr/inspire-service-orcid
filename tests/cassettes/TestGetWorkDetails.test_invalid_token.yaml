@@ -6,7 +6,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
     method: GET
-    uri: https://api.orcid.org/v2.0/0000-0002-0942-3697/works/46674246,46694033
+    uri: https://api.orcid.org/v2.0/0000-0002-0942-3697/works/46674246
   response:
     body: {string: !!python/unicode "{\n  \"error\" : \"invalid_token\",\n  \"error_description\"\
         \ : \"Invalid access token: invalidtoken\"\n}"}

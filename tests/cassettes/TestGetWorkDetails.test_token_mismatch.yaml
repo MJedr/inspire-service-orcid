@@ -6,7 +6,7 @@ interactions:
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
     method: GET
-    uri: https://api.orcid.org/v2.0/0000-0002-6665-4934/works/46674246,46694033
+    uri: https://api.orcid.org/v2.0/0000-0002-6665-4934/works/46674246
   response:
     body: {string: !!python/unicode '{"response-code":401,"developer-message":"401
         Unauthorized: The client application is not authorized for this ORCID record.

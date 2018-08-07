@@ -16,7 +16,7 @@ class BaseTestOrcidClient(object):
         except AttributeError:
             self.oauth_token = 'mytoken'
         self.client = OrcidClient(self.oauth_token, self.orcid)
-        self.putcodes = ['46674246', '46694033']
+        self.putcode = '46674246'
 
 
 class TestGetAllWorksSummary(BaseTestOrcidClient):
@@ -65,39 +65,26 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         assert putcodes[-1] == 46478640
 
 
-class TestGetWorksDetails(BaseTestOrcidClient):
+class TestGetWorkDetails(BaseTestOrcidClient):
     def test_single_putcode(self):
-        response = self.client.get_works_details([self.putcodes[0]])
+        response = self.client.get_work_details(self.putcode)
         response.raise_for_result()
         assert response.ok
         # Test only one field.
-        assert response['bulk'][0]['work']['put-code'] == int(self.putcodes[0])
-
-    def test_multiple_putcodes(self):
-        response = self.client.get_works_details(self.putcodes)
-        response.raise_for_result()
-        assert response.ok
-        # Test only one field.
-        assert response['bulk'][0]['work']['put-code'] == int(self.putcodes[0])
-        assert response['bulk'][1]['work']['put-code'] == int(self.putcodes[1])
-
-    def test_too_many_putcodes(self):
-        response = self.client.get_works_details([str(x) for x in range(100)])
-        with pytest.raises(exceptions.ExceedMaxNumberOfPutCodesException):
-            response.raise_for_result()
+        assert response['bulk'][0]['work']['put-code'] == int(self.putcode)
 
     def test_putcode_not_found(self):
-        response = self.client.get_works_details(['xxx', self.putcodes[0]])
+        response = self.client.get_work_details('xxx')
         with pytest.raises(exceptions.PutcodeNotFoundGetException):
             response.raise_for_result()
 
     def test_missing_putcode(self):
         with pytest.raises(ValueError):
-            self.client.get_works_details([])
+            self.client.get_work_details(None)
 
     def test_invalid_token(self):
         self.client = OrcidClient('invalidtoken', self.orcid)
-        response = self.client.get_works_details(self.putcodes)
+        response = self.client.get_work_details(self.putcode)
         with pytest.raises(exceptions.TokenInvalidException):
             response.raise_for_result()
         assert not response.ok
@@ -108,14 +95,14 @@ class TestGetWorksDetails(BaseTestOrcidClient):
         """
         orcid = '0000-0002-6665-4934'
         self.client = OrcidClient(self.oauth_token, orcid)
-        response = self.client.get_works_details(self.putcodes)
+        response = self.client.get_work_details(self.putcode)
         with pytest.raises(exceptions.TokenMismatchException):
             response.raise_for_result()
         assert not response.ok
 
     def test_invalid_orcid(self):
         self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
-        response = self.client.get_works_details(['12345'])
+        response = self.client.get_work_details('12345')
         with pytest.raises(exceptions.OrcidInvalidException):
             response.raise_for_result()
         assert not response.ok
