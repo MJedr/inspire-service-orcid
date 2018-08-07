@@ -1,16 +1,18 @@
-"""
-Note: copied from inspire_utils
-https://github.com/inspirehep/inspire-utils/blob/master/inspire_utils/record.py
-This is the only code used from that package. If more code will be uased,
-the right strategy would be to use the inspire_utils library directly.
-"""
 import re
+
+from six.moves import range
 
 SPLIT_KEY_PATTERN = re.compile('\.|\[')
 
 
 def get_value(record, key, default=None):
-    """Return item as `dict.__getitem__` but using 'smart queries'.
+    """
+    Note: copied from inspire_utils
+    https://github.com/inspirehep/inspire-utils/blob/master/inspire_utils/record.py
+    This is the only code used from that package. If more code will be uased,
+    the right strategy would be to use the inspire_utils library directly.
+
+    Return item as `dict.__getitem__` but using 'smart queries'.
 
     .. note::
 
@@ -61,3 +63,13 @@ def get_value(record, key, default=None):
         except KeyError:
             return default
     return value
+
+
+def chunked_sequence(sequence, chunk_size):
+    """
+    Yield successive chunk_size sized chunks from sequence.
+    """
+    if not chunk_size > 0:
+        raise ValueError('chunk_size must be > 0')
+    for i in range(0, len(sequence), chunk_size):
+        yield sequence[i:i + chunk_size]

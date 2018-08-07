@@ -90,7 +90,6 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
     specific_exceptions = (exceptions.OrcidNotFoundException,)
 
     def get_putcodes_for_source(self, source_client_id_path):
-        putcodes = []
         for summary in chain(*utils.get_value(self, 'group.work-summary', [])):
             source_client_id_dict = utils.get_value(summary, 'source.source-client-id.path')
             putcode = summary.get('put-code')
@@ -99,8 +98,7 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
                 continue
 
             if source_client_id_dict == source_client_id_path:
-                putcodes.append(putcode)
-        return putcodes
+                yield putcode
 
 
 class GetWorkDetailsResponse(BaseOrcidClientResponse):
@@ -144,6 +142,22 @@ class GetWorkDetailsResponse(BaseOrcidClientResponse):
     specific_exceptions = (exceptions.OrcidInvalidException,
                            exceptions.PutcodeNotFoundGetException,
                            exceptions.GenericGetWorksDetailsException,)
+
+
+class GetBulkWorksDetailsResponse(GetWorkDetailsResponse):
+    specific_exceptions = (exceptions.OrcidInvalidException,
+                           exceptions.ExceedMaxNumberOfPutCodesException,
+                           exceptions.PutcodeNotFoundGetException,
+                           exceptions.GenericGetWorksDetailsException,)
+
+    def get_putcodes_and_urls(self):
+        for item in utils.get_value(self, 'bulk'):
+            putcode = utils.get_value(item, 'work.put-code')
+            url = utils.get_value(item, 'work.url.value')
+            if not putcode or not url:
+                continue
+
+            yield putcode, url
 
 
 class PostNewWorkResponse(BaseOrcidClientResponse):

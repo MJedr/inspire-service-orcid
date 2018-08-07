@@ -4,7 +4,9 @@ from requests.exceptions import HTTPError
 
 from inspire_services.orcid.conf import settings
 
-from . import models
+from . import models, utils
+
+MAX_PUTCODES_PER_WORKS_DETAILS_REQUEST = 100
 
 
 class OrcidClient(object):
@@ -58,6 +60,35 @@ class OrcidClient(object):
         except HTTPError as exc:
             response = exc.response
         return models.GetWorkDetailsResponse(self.memberapi, response)
+
+    def get_bulk_works_details(self, putcodes):
+        """
+        Get a summary of the given works for the given orcid.
+        GET https://api.orcid.org/v2.0/0000-0002-0942-3697/works/46674246
+
+        Args:
+            putcode (List[string]): putcode.
+
+        Yields: a GetWorksDetailsResponse instance.
+
+        Docs: https://members.orcid.org/api/tutorial/read-orcid-records#usetoken
+        """
+        if not putcodes:
+            raise ValueError('putcode can not be an empty sequence')
+
+        # Split the sequence in batches of 100 putcodes.
+        for putcodes_chunk in utils.chunked_sequence(putcodes, MAX_PUTCODES_PER_WORKS_DETAILS_REQUEST):
+            try:
+                response = self.memberapi.read_record_member(
+                    orcid_id=self.orcid,
+                    request_type='works',
+                    token=self.oauth_token,
+                    accept_type=self.accept_json,
+                    put_code=putcodes_chunk,
+                )
+            except HTTPError as exc:
+                response = exc.response
+            yield models.GetBulkWorksDetailsResponse(self.memberapi, response)
 
     def post_new_work(self, xml_element):
         """
