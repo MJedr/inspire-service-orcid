@@ -69,7 +69,14 @@ class OrcidClient(object):
         Args:
             putcode (List[string]): putcode.
 
-        Yields: a GetWorksDetailsResponse instance.
+        Yields:
+            GetWorksDetailsResponse: the response.
+
+        Note:
+            This call can be very expensive for an author with many works (if
+            each work also has many contributors). Fi. for an ATLAS author with
+            ~750 works, 8 calls would be performed with a total data transfer
+            > 0.5 Gb.
 
         Docs: https://members.orcid.org/api/tutorial/read-orcid-records#usetoken
         """
