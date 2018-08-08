@@ -98,7 +98,7 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
                 continue
 
             if source_client_id_dict == source_client_id_path:
-                yield putcode
+                yield str(putcode)
 
 
 class GetWorkDetailsResponse(BaseOrcidClientResponse):

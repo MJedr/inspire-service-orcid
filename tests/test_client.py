@@ -65,8 +65,8 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         response.raise_for_result()
         putcodes = list(response.get_putcodes_for_source('0000-0001-8607-8906'))
         assert len(putcodes) == 802
-        assert putcodes[0] == 43326850
-        assert putcodes[-1] == 46478640
+        assert putcodes[0] == '43326850'
+        assert putcodes[-1] == '46478640'
 
 
 class TestGetWorkDetails(BaseTestOrcidClient):
