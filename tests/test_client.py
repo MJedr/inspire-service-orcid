@@ -143,8 +143,8 @@ class TestGetBulkWorksDetails(object):
             assert response.ok
             putcodes_and_urls = list(response.get_putcodes_and_urls())
             # Note: the recorded cassette returns the same result for each for loop.
-            assert putcodes_and_urls[0] == (43183518, 'http://inspirehep.net/record/1665234')
-            assert putcodes_and_urls[-1] == (44227246, 'http://inspirehep.net/record/1515025')
+            assert putcodes_and_urls[0] == ('43183518', 'http://inspirehep.net/record/1665234')
+            assert putcodes_and_urls[-1] == ('44227246', 'http://inspirehep.net/record/1515025')
 
 
 class TestPostNewWork(BaseTestOrcidClient):

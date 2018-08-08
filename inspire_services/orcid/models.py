@@ -157,7 +157,7 @@ class GetBulkWorksDetailsResponse(GetWorkDetailsResponse):
             if not putcode or not url:
                 continue
 
-            yield putcode, url
+            yield str(putcode), url
 
 
 class PostNewWorkResponse(BaseOrcidClientResponse):
