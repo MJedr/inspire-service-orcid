@@ -109,3 +109,10 @@ class InvalidDataException(BaseOrcidClientJsonException):
     content = {
         'error-code': 9001
     }
+
+
+class TokenWithWrongPermissionException(BaseOrcidClientJsonException):
+    http_status_code = 403
+    content = {
+        'error-code': 9038
+    }

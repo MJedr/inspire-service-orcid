@@ -1,0 +1,50 @@
+interactions:
+- request:
+    body: !!python/unicode "<work:work xmlns:work=\"http://www.orcid.org/ns/work\"\
+      \ xmlns:common=\"http://www.orcid.org/ns/common\" put-code=\"46985330\">\n \
+      \       <work:title>\n            <common:title>ORCID Push test - New Title</common:title>\n\
+      \        </work:title>\n        <work:journal-title>ORCID Push test</work:journal-title>\n\
+      \        <work:type>journal-article</work:type>\n        <common:publication-date>\n\
+      \            <common:year>1975</common:year>\n        </common:publication-date>\n\
+      \        <common:external-ids>\n            <common:external-id>\n         \
+      \       <common:external-id-type>doi</common:external-id-type>\n           \
+      \     <common:external-id-value>10.1000/test.orcid.push</common:external-id-value>\n\
+      \                <common:external-id-url>http://dx.doi.org/10.1000/test.orcid.push</common:external-id-url>\n\
+      \                <common:external-id-relationship>self</common:external-id-relationship>\n\
+      \            </common:external-id>\n        </common:external-ids>\n       \
+      \ <work:url>http://inspirehep.net/record/8201</work:url>\n        <work:contributors>\n\
+      \            <work:contributor>\n                <work:credit-name>Rossoni,\
+      \ A.</work:credit-name>\n                <work:contributor-attributes>\n   \
+      \                 <work:contributor-sequence>first</work:contributor-sequence>\n\
+      \                    <work:contributor-role>author</work:contributor-role>\n\
+      \                </work:contributor-attributes>\n            </work:contributor>\n\
+      \        </work:contributors>\n    </work:work>"
+    headers:
+      Accept: [application/orcid+json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['1456']
+      Content-Type: [application/orcid+xml]
+    method: PUT
+    uri: https://api.orcid.org/v2.0/0000-0002-0942-3697/work/46985330
+  response:
+    body: {string: !!python/unicode '{"response-code":403,"developer-message":"409
+        Conflict: The item has a limited or private visibility and your request doesn''t
+        have the required scope.","user-message":"You don''t have the permissions
+        to execute this action.","error-code":9038,"more-info":"https://members.orcid.org/api/resources/troubleshooting"}'}
+    headers:
+      access-control-allow-origin: ['*']
+      cache-control: ['no-cache, no-store, max-age=0, must-revalidate']
+      connection: [keep-alive]
+      content-length: ['312']
+      content-type: [application/orcid+json; qs=2;charset=UTF-8]
+      date: ['Tue, 25 Sep 2018 10:14:56 GMT']
+      expires: ['0']
+      pragma: [no-cache]
+      server: [nginx/1.4.6 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-content-type-options: [nosniff]
+      x-frame-options: [DENY]
+      x-xss-protection: [1; mode=block]
+    status: {code: 403, message: Forbidden}
+version: 1

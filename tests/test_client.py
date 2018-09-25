@@ -295,6 +295,13 @@ class TestPutUpdatedWork(BaseTestOrcidClient):
             response.raise_for_result()
         assert not response.ok
 
+    def test_token_with_wrong_permission(self):
+        self.client = OrcidClient(self.oauth_token, self.orcid)
+        response = self.client.put_updated_work(self.xml_element, self.putcode)
+        with pytest.raises(exceptions.TokenWithWrongPermissionException):
+            response.raise_for_result()
+        assert not response.ok
+
     def test_token_mismatch(self):
         """
         A valid token, but related to another ORCID.
