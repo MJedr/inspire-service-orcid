@@ -41,9 +41,9 @@ $ tox -e py27  # tox against a specific Python version.
 $ pytest  # pytest against the active venv.
 
 # Run a specific test:
-$ make test/tests/test_orcid.py  # tox against Python27 and Python36.
-$ tox -e py27 -- tests/test_orcid.py  # tox against a specific Python version.
-$ pytest tests/test_orcid.py  # pytest against the active venv.
+$ make test/tests/test_client.py  # tox against Python27 and Python36.
+$ tox -e py27 -- tests/test_client.py  # tox against a specific Python version.
+$ pytest tests/test_client.py  # pytest against the active venv.
 ```
 
 To publish on PyPi, first set the PyPi credentials:
