@@ -58,7 +58,7 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
 
     def test_get_putcodes_for_source(self):
         orcid = '0000-0002-6665-4934'  # ATLAS author with hundreds works.
-        oauth_token = inspire_services.orcid.conf.settings.OAUTH_TOKENS.get(orcid)
+        oauth_token = getattr(inspire_services.orcid.conf.settings, 'OAUTH_TOKENS', {}).get(orcid)
 
         self.client = OrcidClient(oauth_token, orcid)
         response = self.client.get_all_works_summary()
