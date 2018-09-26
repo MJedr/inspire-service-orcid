@@ -219,7 +219,8 @@ class PutUpdatedWorkResponse(BaseOrcidClientResponse):
     """
     specific_exceptions = (exceptions.OrcidNotFoundException,
                            exceptions.PutcodeNotFoundPutException,
-                           exceptions.TokenWithWrongPermissionException,)
+                           exceptions.TokenWithWrongPermissionException,
+                           exceptions.DuplicatedExternalIdentifierException,)
 
     def __init__(self, memberapi, response):
         try:

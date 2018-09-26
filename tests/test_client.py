@@ -296,7 +296,6 @@ class TestPutUpdatedWork(BaseTestOrcidClient):
         assert not response.ok
 
     def test_token_with_wrong_permission(self):
-        self.client = OrcidClient(self.oauth_token, self.orcid)
         response = self.client.put_updated_work(self.xml_element, self.putcode)
         with pytest.raises(exceptions.TokenWithWrongPermissionException):
             response.raise_for_result()
@@ -317,5 +316,11 @@ class TestPutUpdatedWork(BaseTestOrcidClient):
         self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
         response = self.client.put_updated_work(self.xml_element, self.putcode)
         with pytest.raises(exceptions.OrcidNotFoundException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_duplicated_external_identifier(self):
+        response = self.client.put_updated_work(self.xml_element, self.putcode)
+        with pytest.raises(exceptions.DuplicatedExternalIdentifierException):
             response.raise_for_result()
         assert not response.ok

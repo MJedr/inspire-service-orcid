@@ -116,3 +116,10 @@ class TokenWithWrongPermissionException(BaseOrcidClientJsonException):
     content = {
         'error-code': 9038
     }
+
+
+class DuplicatedExternalIdentifierException(BaseOrcidClientJsonException):
+    http_status_code = 409
+    content = {
+        'error-code': 9021
+    }
