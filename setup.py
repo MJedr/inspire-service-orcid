@@ -20,5 +20,5 @@ setup(**{'author': 'puntonim',
  'packages': ['inspire_services', 'inspire_services.orcid'],
  'tests_require': ['tox'],
  'url': 'https://github.com/puntonim/inspire-service-orcid',
- 'version': '2.0.3',
+ 'version': '2.1.0',
  'zip_safe': False})
