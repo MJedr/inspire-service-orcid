@@ -8,17 +8,17 @@ This package is service client for ORCID API used in inspire-next.
 
 ```python
 # Configure settings.
-import inspire_services.orcid.conf
+import inspire_service_orcid.conf
 d = dict(
     DO_USE_SANDBOX=False,
     CONSUMER_KEY='myorcidappkey',
     CONSUMER_SECRET='myorcidappsecret',
     REQUEST_TIMEOUT=30,
 )
-inspire_services.orcid.conf.settings.configure(**d)
+inspire_service_orcid.conf.settings.configure(**d)
 
 # Use the client.
-from inspire_services.orcid.client import OrcidClient
+from inspire_service_orcid.client import OrcidClient
 client = OrcidClient('mytoken', '0000-0002-0942-3697')
 response = client.get_all_works_summary()
 response.raise_for_result()

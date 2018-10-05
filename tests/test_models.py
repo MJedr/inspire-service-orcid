@@ -2,7 +2,7 @@
 import pytest
 from requests.exceptions import HTTPError
 
-from inspire_services.orcid import exceptions, models
+from inspire_service_orcid import exceptions, models
 
 from six import MovedModule, add_move  # isort:skip
 add_move(MovedModule('mock', 'mock', 'unittest.mock'))

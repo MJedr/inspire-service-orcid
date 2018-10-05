@@ -1,6 +1,6 @@
 import pytest
 
-from inspire_services.orcid import utils
+from inspire_service_orcid import utils
 
 
 class TestChunkedSequence(object):

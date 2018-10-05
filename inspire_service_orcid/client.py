@@ -2,7 +2,7 @@
 from orcid import MemberAPI
 from requests.exceptions import HTTPError
 
-from inspire_services.orcid.conf import settings
+from inspire_service_orcid.conf import settings
 
 from . import models, utils
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from inspire_services.orcid import exceptions
+from inspire_service_orcid import exceptions
 
 from six import MovedModule, add_move  # isort:skip
 add_move(MovedModule('mock', 'mock', 'unittest.mock'))

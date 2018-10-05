@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-import inspire_services.orcid.conf
+import inspire_service_orcid.conf
 
 IS_VCR_ENABLED = True
 IS_VCR_EPISODE_OR_ERROR = True  # False to record new cassettes.
@@ -15,12 +15,12 @@ def pytest_configure():
         # You can add it to settings_local.py
         CONSUMER_SECRET='mysecret',
     )
-    inspire_services.orcid.conf.settings.configure(**d)
+    inspire_service_orcid.conf.settings.configure(**d)
 
     # Use local settings, if present.
     try:
         from .settings_local import settings_local
-        inspire_services.orcid.conf.settings.configure(**settings_local)
+        inspire_service_orcid.conf.settings.configure(**settings_local)
     except ImportError:
         pass
 

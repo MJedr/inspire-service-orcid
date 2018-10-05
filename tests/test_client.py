@@ -2,9 +2,9 @@
 import pytest
 from lxml import etree
 
-import inspire_services.orcid.conf
-from inspire_services.orcid import exceptions
-from inspire_services.orcid.client import OrcidClient
+import inspire_service_orcid.conf
+from inspire_service_orcid import exceptions
+from inspire_service_orcid.client import OrcidClient
 
 from six import MovedModule, add_move  # isort:skip
 add_move(MovedModule('mock', 'mock', 'unittest.mock'))
@@ -16,7 +16,7 @@ class BaseTestOrcidClient(object):
         self.orcid = '0000-0002-0942-3697'  # Valid ORCID test account.
         try:
             # Pick the token from settings_local.py first.
-            self.oauth_token = inspire_services.orcid.conf.settings.OAUTH_TOKENS.get(self.orcid)
+            self.oauth_token = inspire_service_orcid.conf.settings.OAUTH_TOKENS.get(self.orcid)
         except AttributeError:
             self.oauth_token = 'mytoken'
         self.client = OrcidClient(self.oauth_token, self.orcid)
@@ -58,7 +58,7 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
 
     def test_get_putcodes_for_source(self):
         orcid = '0000-0002-6665-4934'  # ATLAS author with hundreds works.
-        oauth_token = getattr(inspire_services.orcid.conf.settings, 'OAUTH_TOKENS', {}).get(orcid)
+        oauth_token = getattr(inspire_service_orcid.conf.settings, 'OAUTH_TOKENS', {}).get(orcid)
 
         self.client = OrcidClient(oauth_token, orcid)
         response = self.client.get_all_works_summary()
@@ -118,7 +118,7 @@ class TestGetBulkWorksDetails(object):
         self.orcid = '0000-0002-6665-4934'  # ATLAS author.
         try:
             # Pick the token from settings_local.py first.
-            self.oauth_token = inspire_services.orcid.conf.settings.OAUTH_TOKENS.get(self.orcid)
+            self.oauth_token = inspire_service_orcid.conf.settings.OAUTH_TOKENS.get(self.orcid)
         except AttributeError:
             self.oauth_token = 'mytoken'
         self.client = OrcidClient(self.oauth_token, self.orcid)
@@ -131,7 +131,7 @@ class TestGetBulkWorksDetails(object):
             assert str(response['bulk'][-1]['work']['put-code']) in self.putcodes
 
     def test_too_many_putcodes(self):
-        from inspire_services.orcid import client
+        from inspire_service_orcid import client
         with mock.patch.object(client, 'MAX_PUTCODES_PER_WORKS_DETAILS_REQUEST', 101):
             for response in self.client.get_bulk_works_details([str(x) for x in range(101)]):
                 with pytest.raises(exceptions.ExceedMaxNumberOfPutCodesException):
