@@ -38,6 +38,9 @@ test: clean tox
 test/%: venv pyclean
 	$(TOX) -e $(TOX_PY_LIST) -- $*
 
+pytestname/%:
+	pytest tests -s -x -k $*
+
 lint: venv
 	$(TOX) -e lint
 	$(TOX) -e isort-check

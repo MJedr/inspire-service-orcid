@@ -163,13 +163,18 @@ class GetBulkWorksDetailsResponse(GetWorkDetailsResponse):
 class PostNewWorkResponse(BaseOrcidClientResponse):
     """
     A dict-like object as:
-    {'location': 'http://api.orcid.org/orcid-api-web/v2.0/0000-0002-0942-3697/work/46874897'}
+    {'location': 'http://api.orcid.org/orcid-api-web/v2.0/0000-0002-0942-3697/work/46964761', 'putcode': '46964761'}
     """
     specific_exceptions = (exceptions.WorkAlreadyExistentException,
                            exceptions.InvalidDataException,
                            exceptions.OrcidNotFoundException,)
 
     def __init__(self, memberapi, response):
+        # response is the putcode stripped out from the location: eg. '46964761'.
+        try:
+            response = int(response)
+        except (ValueError, TypeError):
+            pass
         try:
             data = dict(
                 location=memberapi.raw_response.headers['location'],
@@ -225,6 +230,9 @@ class PutUpdatedWorkResponse(BaseOrcidClientResponse):
     def __init__(self, memberapi, response):
         try:
             data = memberapi.raw_response.json()
+            # Add 'putcode' key such that POST and PUT have the same key.
+            if data.get('put-code'):
+                data['putcode'] = data['put-code']
         except AttributeError:
             data = response
         super(PutUpdatedWorkResponse, self).__init__(memberapi, data)
