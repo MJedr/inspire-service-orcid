@@ -55,3 +55,6 @@ setup.py: venv
 publish: setup.py
 	$(PYTHON) setup.py sdist
 	$(TWINE) upload dist/*
+
+cleanpipcache:
+	rm -rf ~/Library/Caches/pip
