@@ -68,6 +68,16 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         assert putcodes[0] == '43326850'
         assert putcodes[-1] == '46478640'
 
+    def test_get_putcodes_for_source_source_client_id_none(self):
+        orcid = '0000-0002-4490-1930'
+        token = '5b5cde05-e9f8-4aa4-9de3-de4d23f1b86a'
+        self.client = OrcidClient(token, orcid)
+
+        response = self.client.get_all_works_summary()
+        response.raise_for_result()
+        putcodes = list(response.get_putcodes_for_source('0000-0001-8607-8906'))
+        assert len(putcodes) == 90
+
 
 class TestGetWorkDetails(BaseTestOrcidClient):
     def test_happy_flow(self):

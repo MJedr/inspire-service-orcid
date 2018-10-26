@@ -93,8 +93,8 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
     specific_exceptions = (exceptions.OrcidNotFoundException,)
 
     def get_putcodes_for_source(self, source_client_id_path):
-        for summary in chain(*utils.get_value(self, 'group.work-summary', [])):
-            source_client_id_dict = utils.get_value(summary, 'source.source-client-id.path')
+        for summary in chain(*utils.smartget(self, 'group.work-summary', [])):
+            source_client_id_dict = utils.smartget(summary, 'source.source-client-id.path')
             putcode = summary.get('put-code')
 
             if not putcode or not source_client_id_dict:
@@ -154,9 +154,9 @@ class GetBulkWorksDetailsResponse(GetWorkDetailsResponse):
                            exceptions.GenericGetWorksDetailsException,)
 
     def get_putcodes_and_urls(self):
-        for item in utils.get_value(self, 'bulk'):
-            putcode = utils.get_value(item, 'work.put-code')
-            url = utils.get_value(item, 'work.url.value')
+        for item in utils.smartget(self, 'bulk'):
+            putcode = utils.smartget(item, 'work.put-code')
+            url = utils.smartget(item, 'work.url.value')
             if not putcode or not url:
                 continue
 

@@ -5,32 +5,16 @@ from six.moves import range
 SPLIT_KEY_PATTERN = re.compile(r'\.|\[')
 
 
-def get_value(record, key, default=None):
-    """
-    Note: copied from inspire_utils
-    https://github.com/inspirehep/inspire-utils/blob/master/inspire_utils/record.py
-    This is the only code used from that package. If more code will be uased,
-    the right strategy would be to use the inspire_utils library directly.
-
-    Return item as `dict.__getitem__` but using 'smart queries'.
-
-    .. note::
-
-        Accessing one value in a normal way, meaning d['a'], is almost as
-        fast as accessing a regular dictionary. But using the special
-        name convention is a bit slower than using the regular access:
-        .. code-block:: python
-            >>> %timeit x = dd['a[0].b']
-            100000 loops, best of 3: 3.94 us per loop
-            >>> %timeit x = dd['a'][0]['b']
-            1000000 loops, best of 3: 598 ns per loop
-    """
+def smartget(data, key, default=None):
+    # Inspired by: https://github.com/inspirehep/inspire-utils/blob/master/inspire_utils/record.py#L31
     def getitem(k, v, default):
+        # v is a dictionary.
         if isinstance(v, dict):
             return v[k]
+        # v is probably a list.
         elif ']' in k:
-            k = k[:-1].replace('n', '-1')
-            # Work around for list indexes and slices
+            k = k[:-1].replace('n', '-1')  # Get the last with either [-1] or [n].
+            # Work around for list indexes and slices.
             try:
                 return v[int(k)]
             except IndexError:
@@ -49,20 +33,37 @@ def get_value(record, key, default=None):
                     continue
             return tmp
 
-    # Check if we are using python regular keys
+    # Try regular Python first.
     try:
-        return record[key]
-    except KeyError:
+        key = int(key)
+    except ValueError:
+        pass
+    try:
+        return data[key]
+    except (KeyError, TypeError):
         pass
 
     keys = SPLIT_KEY_PATTERN.split(key)
-    value = record
+    value = data
     for k in keys:
         try:
             value = getitem(k, value, default)
         except KeyError:
             return default
+        except TypeError:
+            if k and value is None:
+                # value is currently None and we are trying to get a key.
+                return default
+            raise
     return value
+
+
+def smartget_if(data, key, condition, default=None):
+    unfiltered_result = smartget(data, key, default)
+    if isinstance(unfiltered_result, list):
+        return [_ for _ in unfiltered_result if condition(_)]
+
+    return unfiltered_result if condition(unfiltered_result) else None
 
 
 def chunked_sequence(sequence, chunk_size):
