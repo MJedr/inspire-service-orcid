@@ -2,7 +2,7 @@ import re
 
 from six.moves import range
 
-SPLIT_KEY_PATTERN = re.compile('\.|\[')
+SPLIT_KEY_PATTERN = re.compile(r'\.|\[')
 
 
 def get_value(record, key, default=None):

@@ -123,3 +123,10 @@ class DuplicatedExternalIdentifierException(BaseOrcidClientJsonException):
     content = {
         'error-code': 9021
     }
+
+
+class ExternalIdentifierRequiredException(BaseOrcidClientJsonException):
+    http_status_code = 400
+    content = {
+        'error-code': 9023
+    }

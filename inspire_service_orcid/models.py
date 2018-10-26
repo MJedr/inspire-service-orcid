@@ -35,7 +35,8 @@ class BaseOrcidClientResponse(dict):
 
     @property
     def exceptions(self):
-        return self.base_exceptions + getattr(self, 'specific_exceptions', tuple())
+        # Note: more specific exceptions first.
+        return getattr(self, 'specific_exceptions', tuple()) + self.base_exceptions
 
     def raise_for_result(self):
         """
@@ -167,7 +168,8 @@ class PostNewWorkResponse(BaseOrcidClientResponse):
     """
     specific_exceptions = (exceptions.WorkAlreadyExistentException,
                            exceptions.InvalidDataException,
-                           exceptions.OrcidNotFoundException,)
+                           exceptions.OrcidNotFoundException,
+                           exceptions.ExternalIdentifierRequiredException,)
 
     def __init__(self, memberapi, response):
         # response is the putcode stripped out from the location: eg. '46964761'.
@@ -225,7 +227,8 @@ class PutUpdatedWorkResponse(BaseOrcidClientResponse):
     specific_exceptions = (exceptions.OrcidNotFoundException,
                            exceptions.PutcodeNotFoundPutException,
                            exceptions.TokenWithWrongPermissionException,
-                           exceptions.DuplicatedExternalIdentifierException,)
+                           exceptions.DuplicatedExternalIdentifierException,
+                           exceptions.ExternalIdentifierRequiredException,)
 
     def __init__(self, memberapi, response):
         try:

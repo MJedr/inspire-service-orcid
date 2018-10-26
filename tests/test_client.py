@@ -229,6 +229,37 @@ class TestPostNewWork(BaseTestOrcidClient):
             response.raise_for_result()
         assert not response.ok
 
+    def test_external_identifier_required(self):
+        work_xml_data = """<?xml version="1.0" encoding="UTF-8"?>
+        <work:work xmlns:work="http://www.orcid.org/ns/work" xmlns:common="http://www.orcid.org/ns/common">
+            <work:title>
+                <common:title>ORCID Push test</common:title>
+            </work:title>
+            <work:journal-title>ORCID Push test</work:journal-title>
+            <work:type>journal-article</work:type>
+            <common:publication-date>
+                <common:year>1975</common:year>
+            </common:publication-date>
+            <common:external-ids>
+            </common:external-ids>
+            <work:url>http://inspirehep.net/record/8201</work:url>
+            <work:contributors>
+                <work:contributor>
+                    <work:credit-name>Rossoni, A.</work:credit-name>
+                    <work:contributor-attributes>
+                        <work:contributor-sequence>first</work:contributor-sequence>
+                        <work:contributor-role>author</work:contributor-role>
+                    </work:contributor-attributes>
+                </work:contributor>
+            </work:contributors>
+        </work:work>
+        """
+        xml_element = etree.fromstring(work_xml_data.encode('utf-8'))
+        response = self.client.post_new_work(xml_element)
+        with pytest.raises(exceptions.ExternalIdentifierRequiredException):
+            response.raise_for_result()
+        assert not response.ok
+
 
 class TestPutUpdatedWork(BaseTestOrcidClient):
     new_title = 'ORCID Push test - New Title'
@@ -323,5 +354,36 @@ class TestPutUpdatedWork(BaseTestOrcidClient):
     def test_duplicated_external_identifier(self):
         response = self.client.put_updated_work(self.xml_element, self.putcode)
         with pytest.raises(exceptions.DuplicatedExternalIdentifierException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_external_identifier_required(self):
+        work_xml_data = """<?xml version="1.0" encoding="UTF-8"?>
+        <work:work xmlns:work="http://www.orcid.org/ns/work" xmlns:common="http://www.orcid.org/ns/common">
+            <work:title>
+                <common:title>{}</common:title>
+            </work:title>
+            <work:journal-title>ORCID Push test</work:journal-title>
+            <work:type>journal-article</work:type>
+            <common:publication-date>
+                <common:year>1975</common:year>
+            </common:publication-date>
+            <common:external-ids>
+            </common:external-ids>
+            <work:url>http://inspirehep.net/record/8201</work:url>
+            <work:contributors>
+                <work:contributor>
+                    <work:credit-name>Rossoni, A.</work:credit-name>
+                    <work:contributor-attributes>
+                        <work:contributor-sequence>first</work:contributor-sequence>
+                        <work:contributor-role>author</work:contributor-role>
+                    </work:contributor-attributes>
+                </work:contributor>
+            </work:contributors>
+        </work:work>
+        """.format(self.new_title)
+        xml_element = etree.fromstring(work_xml_data.encode('utf-8'))
+        response = self.client.put_updated_work(xml_element, self.putcode)
+        with pytest.raises(exceptions.ExternalIdentifierRequiredException):
             response.raise_for_result()
         assert not response.ok
