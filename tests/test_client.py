@@ -229,6 +229,12 @@ class TestPostNewWork(BaseTestOrcidClient):
             response.raise_for_result()
         assert not response.ok
 
+    def test_generic_400(self):
+        response = self.client.post_new_work(self.xml_element)
+        with pytest.raises(exceptions.Generic400Exception):
+            response.raise_for_result()
+        assert not response.ok
+
     def test_external_identifier_required(self):
         work_xml_data = """<?xml version="1.0" encoding="UTF-8"?>
         <work:work xmlns:work="http://www.orcid.org/ns/work" xmlns:common="http://www.orcid.org/ns/common">

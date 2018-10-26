@@ -8,7 +8,9 @@ from . import exceptions, utils
 
 class BaseOrcidClientResponse(dict):
     base_exceptions = (exceptions.TokenInvalidException,
-                       exceptions.TokenMismatchException,)
+                       exceptions.TokenMismatchException,
+                       # The order matters, keep the most generic ones at the end.
+                       exceptions.Generic400Exception,)
 
     def __init__(self, memberapi, response):
         if isinstance(response, dict):

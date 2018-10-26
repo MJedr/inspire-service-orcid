@@ -130,3 +130,7 @@ class ExternalIdentifierRequiredException(BaseOrcidClientJsonException):
     content = {
         'error-code': 9023
     }
+
+
+class Generic400Exception(BaseOrcidClientJsonException):
+    http_status_code = 400
