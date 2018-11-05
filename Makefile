@@ -12,20 +12,10 @@ PYTHON=$(shell "$(CMD_FROM_VENV)" "python")
 TOX_PY_LIST="$(shell $(TOX) -l | grep ^py | xargs | sed -e 's/ /,/g')"
 
 
-.PHONY: tox pyclean clean venv test lint isort setup.py publish
+.PHONY: tox pyclean clean cleanpipcache venv test pytestname lint isort setup.py publish requirements
 
 tox: venv setup.py
 	$(TOX)
-
-pyclean:
-	find . -name *.pyc -delete
-	rm -rf *.egg-info build
-	rm -rf coverage.xml .coverage
-
-clean: pyclean
-	rm -rf venv
-	rm -rf .tox
-	rm -rf dist
 
 venv:
 	$(VIRTUALENV) -p $(shell which python2.7) venv
@@ -37,9 +27,6 @@ test: clean tox
 
 test/%: venv pyclean
 	$(TOX) -e $(TOX_PY_LIST) -- $*
-
-pytestname/%:
-	pytest tests -s -x -k $*
 
 lint: venv
 	$(TOX) -e lint
@@ -55,6 +42,29 @@ setup.py: venv
 publish: setup.py
 	$(PYTHON) setup.py sdist
 	$(TWINE) upload dist/*
+
+
+## Utilities for the venv currently active.
+
+pytestname/%:
+	pytest tests -s -x -k $*
+
+requirements:
+	pip install -U -r $(DEPS)
+
+
+## Generic utilitites.
+
+pyclean:
+	find . -name *.pyc -delete
+	rm -rf *.egg-info build
+	rm -rf coverage.xml .coverage
+	rm -rf .pytest_cache
+
+clean: pyclean
+	rm -rf venv
+	rm -rf .tox
+	rm -rf dist
 
 cleanpipcache:
 	rm -rf ~/Library/Caches/pip

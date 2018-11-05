@@ -1,9 +1,28 @@
 # Create a file settings.local.py to add special settings for the orcid client.
 # This file will be ignored by git.
 
+from time_execution.backends.elasticsearch import ElasticsearchBackend
+
+_ES_KWARGS = dict(
+    port=443,
+    http_auth=('myuser', 'mypass'),
+    use_ssl=True,
+    verify_certs=False,
+)
+_ES_HOSTS = [
+    dict(host='inspire-qa-logs-client1.cern.ch', **_ES_KWARGS),
+    dict(host='inspire-qa-logs-client2.cern.ch', **_ES_KWARGS),
+]
+_ES_INDEX = 'myindex-test'
+
 settings_local = dict(
     CONSUMER_SECRET='qasecret',
     OAUTH_TOKENS={
-        '0000-0002-0942-3697': 'validtoken',
-    }
+        '0000-0002-0942-3697': 'validtoken1',  # Andrea Rossoni
+        '0000-0002-6665-4934': 'validtoken2',  # Georges A.
+    },
+    DO_ENABLE_METRICS=False,
+    # Note: use the sync backend when debugging, as the the async thread would die
+    # too early (before actually sending the metrics).
+    METRICS_BACKENDS=[ElasticsearchBackend(hosts=_ES_HOSTS, index=_ES_INDEX,)],
 )

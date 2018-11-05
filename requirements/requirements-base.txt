@@ -1,2 +1,3 @@
 pkgsettings>=0.12.0,<1.0.0
 orcid>=1.0.3,<2
+timeexecution>=3.3.0,<4

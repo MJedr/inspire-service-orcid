@@ -14,6 +14,7 @@ def pytest_configure():
         # Note: use the PROD/QA one when recording new episodes
         # You can add it to settings_local.py
         CONSUMER_SECRET='mysecret',
+        DO_ENABLE_METRICS=False,
     )
     inspire_service_orcid.conf.settings.configure(**d)
 
@@ -40,8 +41,9 @@ def vcr_config():
         'decode_compressed_response': True,
         'filter_headers': ('Authorization', 'User-Agent'),
         'record_mode': record_mode,
-        # 'ignore_hosts': ('localhost',),
-
+        'ignore_hosts': ('localhost',
+                         'inspire-qa-logs-client1.cern.ch',
+                         'inspire-qa-logs-client2.cern.ch',),
     }
 
 
