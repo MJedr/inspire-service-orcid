@@ -57,15 +57,13 @@ password: mypass
 ```
 
 ```bash
-# Edit the version in `setup_gen.py`.
-# ... version=pep440_version('1.1.1'),
-# Then generate setup.py with:
-$ make setup.py
-# Commit, tag, push:
-$ git commit -m '1.1.1 release'
+# Tag the new version:
 $ git tag 1.1.1
-$ git push origin master --tags
-
-# Finally publish:
+# Then generate setup.py and publish:
+$ make setup.py
 $ make publish
+# Commit the setup.py file:
+$ git add .
+$ git commit -m '1.1.1 released'
+$ git push origin master --tags
 ```
