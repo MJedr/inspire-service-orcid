@@ -97,7 +97,7 @@ class OrcidClient(object):
             response = exc.response
         return models.GetBulkWorksDetailsResponse(self.memberapi, response)
 
-    def generate_get_bulk_works_details(self, putcodes):
+    def get_bulk_works_details_iter(self, putcodes):
         """
         Yield a summary of the given works for the given orcid.
         A number of requests:

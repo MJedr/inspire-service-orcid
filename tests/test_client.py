@@ -134,7 +134,7 @@ class TestGenerateGetBulkWorksDetails(object):
         self.client = OrcidClient(self.oauth_token, self.orcid)
 
     def test_happy_flow(self):
-        for response in self.client.generate_get_bulk_works_details(self.putcodes):
+        for response in self.client.get_bulk_works_details_iter(self.putcodes):
             response.raise_for_result()
             assert response.ok
             assert str(response['bulk'][0]['work']['put-code']) in self.putcodes
@@ -143,12 +143,12 @@ class TestGenerateGetBulkWorksDetails(object):
     def test_too_many_putcodes(self):
         from inspire_service_orcid import client
         with mock.patch.object(client, 'MAX_PUTCODES_PER_WORKS_DETAILS_REQUEST', 101):
-            for response in self.client.generate_get_bulk_works_details([str(x) for x in range(101)]):
+            for response in self.client.get_bulk_works_details_iter([str(x) for x in range(101)]):
                 with pytest.raises(exceptions.ExceedMaxNumberOfPutCodesException):
                     response.raise_for_result()
 
     def test_get_putcodes_and_urls(self):
-        for response in self.client.generate_get_bulk_works_details(self.putcodes):
+        for response in self.client.get_bulk_works_details_iter(self.putcodes):
             response.raise_for_result()
             assert response.ok
             putcodes_and_urls = list(response.get_putcodes_and_urls())
