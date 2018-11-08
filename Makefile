@@ -53,7 +53,7 @@ requirements:
 	pip install -U -r $(DEPS)
 
 
-## Generic utilitites.
+## Generic utilities.
 
 pyclean:
 	find . -name *.pyc -delete

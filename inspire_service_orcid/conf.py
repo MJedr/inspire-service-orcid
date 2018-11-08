@@ -53,7 +53,7 @@ def status_code_hook(response, exception, metric, func_args, func_kwargs):
 
 
 def orcid_error_code_hook(response, exception, metric, func_args, func_kwargs):
-    if not response:
+    if not response or not hasattr(response, 'get'):
         return None
     data = {}
     error_code = response.get('error-code')
