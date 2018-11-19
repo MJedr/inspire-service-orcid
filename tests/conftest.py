@@ -26,7 +26,7 @@ def pytest_configure():
         pass
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def vcr_config():
     if IS_VCR_EPISODE_OR_ERROR:
         record_mode = 'none'

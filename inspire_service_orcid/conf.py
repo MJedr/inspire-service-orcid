@@ -5,7 +5,6 @@ from time_execution.backends.elasticsearch import ElasticsearchBackend
 
 from inspire_service_orcid.exceptions import BaseOrcidClientJsonException
 
-
 defaults = dict(
     DO_USE_SANDBOX=False,
     CONSUMER_KEY='myorcidappkey',
