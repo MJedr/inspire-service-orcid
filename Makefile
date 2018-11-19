@@ -12,21 +12,63 @@ PYTHON=$(shell "$(CMD_FROM_VENV)" "python")
 TOX_PY_LIST="$(shell $(TOX) -l | grep ^py | xargs | sed -e 's/ /,/g')"
 
 
-.PHONY: tox pyclean clean cleanpipcache venv test pytestname lint isort setup.py publish requirements
+.PHONY: venv requirements pyclean clean pipclean tox tests test pytests pytest lint isort setup.py publish
 
-tox: venv setup.py
-	$(TOX)
 
 venv:
 	$(VIRTUALENV) -p $(shell which python2.7) venv
 	. venv/bin/activate
 	$(PIP) install -U "pip>=18.0" -q
-	$(PIP) install -r $(DEPS)
+	$(PIP) install -U -r $(DEPS)
 
-test: clean tox
+
+## Utilities for the venv currently active.
+
+_ensure_active_env:
+ifndef VIRTUAL_ENV
+	@echo 'Error: no virtual environment active'
+	@exit 1
+endif
+
+requirements: _ensure_active_env
+	pip install -U "pip>=18.0" -q
+	pip install -U -r $(DEPS)
+
+
+## Generic utilities.
+
+pyclean:
+	find . -name *.pyc -delete
+	rm -rf *.egg-info build
+	rm -rf coverage.xml .coverage
+	rm -rf .pytest_cache
+	rm -rf __pycache__
+
+clean: pyclean
+	rm -rf venv
+	rm -rf .tox
+	rm -rf dist
+
+pipclean:
+	rm -rf ~/Library/Caches/pip
+	rm -rf ~/.cache/pip
+
+
+## Tox, pytest, setuptools.
+
+tox: venv setup.py
+	$(TOX)
+
+tests: clean tox
 
 test/%: venv pyclean
 	$(TOX) -e $(TOX_PY_LIST) -- $*
+
+pytests: _ensure_active_env
+	pytest tests -s -x
+
+pytest/%: _ensure_active_env
+	pytest tests -s -x -k $*
 
 lint: venv
 	$(TOX) -e lint
@@ -42,29 +84,3 @@ setup.py: venv
 publish: setup.py
 	$(PYTHON) setup.py sdist
 	$(TWINE) upload dist/*
-
-
-## Utilities for the venv currently active.
-
-pytestname/%:
-	pytest tests -s -x -k $*
-
-requirements:
-	pip install -U -r $(DEPS)
-
-
-## Generic utilities.
-
-pyclean:
-	find . -name *.pyc -delete
-	rm -rf *.egg-info build
-	rm -rf coverage.xml .coverage
-	rm -rf .pytest_cache
-
-clean: pyclean
-	rm -rf venv
-	rm -rf .tox
-	rm -rf dist
-
-cleanpipcache:
-	rm -rf ~/Library/Caches/pip

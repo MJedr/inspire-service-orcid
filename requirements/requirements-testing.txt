@@ -8,7 +8,7 @@ mock
 # PyTest for running the tests.
 pytest
 pytest-cov
-pytest-vcr
+pytest-vcr<1,>=0.3
 
 # docs
 sphinx
