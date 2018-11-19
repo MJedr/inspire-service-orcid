@@ -3,6 +3,9 @@ import time_execution
 from pkgsettings import Settings as PkgSettings
 from time_execution.backends.elasticsearch import ElasticsearchBackend
 
+from inspire_service_orcid.exceptions import BaseOrcidClientJsonException
+
+
 defaults = dict(
     DO_USE_SANDBOX=False,
     CONSUMER_KEY='myorcidappkey',
@@ -27,6 +30,7 @@ def configure_time_execution(**kwargs):
         hooks=(
             status_code_hook,
             orcid_error_code_hook,
+            orcid_service_exception_hook,
         ),
         origin=kwargs['METRICS_ORIGIN'],
     )
@@ -66,3 +70,13 @@ def orcid_error_code_hook(response, exception, metric, func_args, func_kwargs):
     if not developer_message and user_message:
         data['orcid_user_message'] = user_message
     return data
+
+
+def orcid_service_exception_hook(response, exception, metric, func_args, func_kwargs):
+    if not response or not hasattr(response, 'raise_for_result'):
+        return None
+
+    try:
+        response.raise_for_result()
+    except BaseOrcidClientJsonException as exc:
+        return {'orcid_service_exc': exc.__class__.__name__}
