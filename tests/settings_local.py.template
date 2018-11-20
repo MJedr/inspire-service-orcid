@@ -1,7 +1,5 @@
 # Create a file settings.local.py to add special settings for the orcid client.
 # This file will be ignored by git.
-from time_execution.backends.elasticsearch import ElasticsearchBackend
-
 
 settings_local = {}
 
@@ -14,6 +12,10 @@ if False:
 
 
 if False:
+    import time_execution
+    from inspire_service_orcid import hooks
+    from time_execution.backends.elasticsearch import ElasticsearchBackend
+
     _ES_KWARGS = dict(
         port=443,
         http_auth=('user', 'pass'),
@@ -25,7 +27,16 @@ if False:
         dict(host='inspire-qa-logs-client2.cern.ch', **_ES_KWARGS),
     ]
     _ES_INDEX = 'inspireappmetrics-qa'
-    settings_local['DO_ENABLE_METRICS'] = True
+
     # Note: use the sync backend when debugging, as the the async thread would die
     # too early (before actually sending the metrics).
-    settings_local['METRICS_BACKENDS'] = [ElasticsearchBackend(hosts=_ES_HOSTS, index=_ES_INDEX,)]
+    hooks = [
+        hooks.status_code_hook,
+        hooks.orcid_error_code_hook,
+        hooks.orcid_service_exception_hook,
+    ]
+    time_execution.settings.configure(
+        backends=[ElasticsearchBackend(hosts=_ES_HOSTS, index=_ES_INDEX,)],
+        hooks=hooks,
+        origin='inspire_next'
+    )

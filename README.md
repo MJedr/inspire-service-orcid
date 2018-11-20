@@ -25,6 +25,23 @@ response.raise_for_result()
 putcode = response['group'][0]['work-summary'][0]['put-code']
 ```
 
+In order to use time_execution to collect metrics, configure it first:
+```python
+import time_execution
+from inspire_service_orcid import hooks
+
+hooks = [
+    hooks.status_code_hook,
+    hooks.orcid_error_code_hook,
+    hooks.orcid_service_exception_hook,
+]
+time_execution.settings.configure(
+    backends=[mybackend],
+    hooks=hooks,
+    origin='inspire_next'
+)
+```
+
 ## Development
 
 ```bash
