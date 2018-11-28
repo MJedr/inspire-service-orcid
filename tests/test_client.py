@@ -403,3 +403,46 @@ class TestPutUpdatedWork(BaseTestOrcidClient):
         with pytest.raises(exceptions.ExternalIdentifierRequiredException):
             response.raise_for_result()
         assert not response.ok
+
+
+class TestDeleteWork(BaseTestOrcidClient):
+    def setup(self):
+        super(TestDeleteWork, self).setup()
+        self.putcode = '50889481'
+
+    def test_happy_flow(self):
+        response = self.client.delete_work(self.putcode)
+        response.raise_for_result()
+        assert response.ok
+
+    def test_putcode_not_found(self):
+        response = self.client.delete_work('0000')
+        with pytest.raises(exceptions.PutcodeNotFoundPutException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_invalid_token(self):
+        self.client = OrcidClient('invalidtoken', self.orcid)
+        response = self.client.delete_work(self.putcode)
+        with pytest.raises(exceptions.TokenInvalidException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_token_with_wrong_permission(self):
+        response = self.client.delete_work(self.putcode)
+        with pytest.raises(exceptions.TokenWithWrongPermissionException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_token_mismatch(self):
+        response = self.client.delete_work(self.putcode)
+        with pytest.raises(exceptions.TokenMismatchException):
+            response.raise_for_result()
+        assert not response.ok
+
+    def test_invalid_orcid(self):
+        self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
+        response = self.client.delete_work(self.putcode)
+        with pytest.raises(exceptions.OrcidNotFoundException):
+            response.raise_for_result()
+        assert not response.ok

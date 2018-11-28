@@ -118,7 +118,7 @@ class OrcidClient(object):
         Docs: https://members.orcid.org/api/tutorial/read-orcid-records#usetoken
         """
         if not putcodes:
-            raise ValueError('putcode can not be an empty sequence')
+            raise ValueError('putcodes can not be an empty sequence')
 
         # Split the sequence in batches of 100 putcodes.
         for putcodes_chunk in utils.chunked_sequence(putcodes, MAX_PUTCODES_PER_WORKS_DETAILS_REQUEST):
@@ -158,7 +158,7 @@ class OrcidClient(object):
             putcode (string): work's putcode.
         """
         if not putcode:
-            raise ValueError('pucodes cannot be an empty sequence')
+            raise ValueError('putcode cannot be empty')
         if xml_element is None:
             raise ValueError('xml_element cannot be None')
 
@@ -174,3 +174,26 @@ class OrcidClient(object):
         except HTTPError as exc:
             response = exc.response
         return models.PutUpdatedWorkResponse(self.memberapi, response)
+
+    @time_execution
+    def delete_work(self, putcode):
+        """
+        Delete en existent work.
+        DELETE https://api.orcid.org/v2.0/0000-0002-0942-3697/work/46985330
+
+        Args:
+            putcode (string): work's putcode.
+        """
+        if not putcode:
+            raise ValueError('putcode cannot be empty')
+
+        try:
+            response = self.memberapi.remove_record(
+                orcid_id=self.orcid,
+                token=self.oauth_token,
+                request_type='work',
+                put_code=putcode,
+            )
+        except HTTPError as exc:
+            response = exc.response
+        return models.DeleteWorkResponse(self.memberapi, response)

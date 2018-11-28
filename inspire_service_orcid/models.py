@@ -19,8 +19,11 @@ class BaseOrcidClientResponse(dict):
         elif isinstance(response, Response):
             data = response.json()
             self.raw_response = response
+        elif not response and hasattr(memberapi, 'raw_response'):
+            data = ''
+            self.raw_response = memberapi.raw_response
         else:
-            raise ValueError('response must be a dict or a requests\' Response')
+            raise ValueError('unknown response')
         super(BaseOrcidClientResponse, self).__init__(data)
 
     @property
@@ -241,3 +244,12 @@ class PutUpdatedWorkResponse(BaseOrcidClientResponse):
         except AttributeError:
             data = response
         super(PutUpdatedWorkResponse, self).__init__(memberapi, data)
+
+
+class DeleteWorkResponse(BaseOrcidClientResponse):
+    """
+    An empty dict-like object.
+    """
+    specific_exceptions = (exceptions.OrcidNotFoundException,
+                           exceptions.PutcodeNotFoundPutException,
+                           exceptions.TokenWithWrongPermissionException,)
