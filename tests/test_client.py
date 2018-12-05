@@ -14,13 +14,13 @@ from six.moves import mock  # noqa:E402 isort:skip
 class BaseTestOrcidClient(object):
     def setup(self):
         self.orcid = '0000-0002-0942-3697'  # Valid ORCID test account.
-        try:
-            # Pick the token from settings_local.py first.
-            self.oauth_token = inspire_service_orcid.conf.settings.OAUTH_TOKENS.get(self.orcid)
-        except AttributeError:
-            self.oauth_token = 'mytoken'
-        self.client = OrcidClient(self.oauth_token, self.orcid)
         self.putcode = '46674246'
+
+    @property
+    def client(self):
+        # Pick the token from settings_local.py first.
+        self.oauth_token = getattr(inspire_service_orcid.conf.settings, 'OAUTH_TOKENS', {}).get(self.orcid, 'mytoken')
+        return OrcidClient(self.oauth_token, self.orcid)
 
 
 class TestGetAllWorksSummary(BaseTestOrcidClient):
@@ -32,8 +32,8 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         assert response['group'][0]['work-summary'][0]['put-code'] == 46674246
 
     def test_invalid_token(self):
-        self.client = OrcidClient('invalidtoken', self.orcid)
-        response = self.client.get_all_works_summary()
+        client = OrcidClient('invalidtoken', self.orcid)
+        response = client.get_all_works_summary()
         with pytest.raises(exceptions.TokenInvalidException):
             response.raise_for_result()
         assert not response.ok
@@ -42,25 +42,21 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         """
         A valid token, but related to another ORCID.
         """
-        orcid = '0000-0002-6665-4934'
-        self.client = OrcidClient(self.oauth_token, orcid)
+        self.orcid = '0000-0002-6665-4934'
         response = self.client.get_all_works_summary()
         with pytest.raises(exceptions.TokenMismatchException):
             response.raise_for_result()
         assert not response.ok
 
     def test_invalid_orcid(self):
-        self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
+        self.orcid = 'INVALID-ORCID'
         response = self.client.get_all_works_summary()
         with pytest.raises(exceptions.OrcidNotFoundException):
             response.raise_for_result()
         assert not response.ok
 
     def test_get_putcodes_for_source(self):
-        orcid = '0000-0002-6665-4934'  # ATLAS author with hundreds works.
-        oauth_token = getattr(inspire_service_orcid.conf.settings, 'OAUTH_TOKENS', {}).get(orcid)
-
-        self.client = OrcidClient(oauth_token, orcid)
+        self.orcid = '0000-0002-6665-4934'  # ATLAS author with hundreds works.
         response = self.client.get_all_works_summary()
         response.raise_for_result()
         putcodes = list(response.get_putcodes_for_source('0000-0001-8607-8906'))
@@ -70,13 +66,27 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
 
     def test_get_putcodes_for_source_source_client_id_none(self):
         orcid = '0000-0002-4490-1930'
-        token = '5b5cde05-e9f8-4aa4-9de3-de4d23f1b86a'
-        self.client = OrcidClient(token, orcid)
-
-        response = self.client.get_all_works_summary()
+        client = OrcidClient('mytoken', orcid)
+        response = client.get_all_works_summary()
         response.raise_for_result()
         putcodes = list(response.get_putcodes_for_source('0000-0001-8607-8906'))
         assert len(putcodes) == 90
+
+    def test_get_putcodes_and_recids_for_source(self):
+        self.orcid = '0000-0002-5073-0816'
+        response = self.client.get_all_works_summary()
+        response.raise_for_result()
+        assert response.ok
+        expected = [('51341099', '20'), ('51341192', None)]
+        assert list(response.get_putcodes_and_recids_for_source('0000-0001-8607-8906')) == expected
+
+    def test_get_putcodes_and_recids_for_source_no_recid(self):
+        self.orcid = '0000-0002-5073-0816'
+        response = self.client.get_all_works_summary()
+        response.raise_for_result()
+        assert response.ok
+        expected = [('51341099', None), ('51341192', None)]
+        assert list(response.get_putcodes_and_recids_for_source('0000-0001-8607-8906')) == expected
 
 
 class TestGetWorkDetails(BaseTestOrcidClient):
@@ -97,8 +107,8 @@ class TestGetWorkDetails(BaseTestOrcidClient):
             self.client.get_work_details(None)
 
     def test_invalid_token(self):
-        self.client = OrcidClient('invalidtoken', self.orcid)
-        response = self.client.get_work_details(self.putcode)
+        client = OrcidClient('invalidtoken', self.orcid)
+        response = client.get_work_details(self.putcode)
         with pytest.raises(exceptions.TokenInvalidException):
             response.raise_for_result()
         assert not response.ok
@@ -107,15 +117,14 @@ class TestGetWorkDetails(BaseTestOrcidClient):
         """
         A valid token, but related to another ORCID.
         """
-        orcid = '0000-0002-6665-4934'
-        self.client = OrcidClient(self.oauth_token, orcid)
+        self.orcid = '0000-0002-6665-4934'
         response = self.client.get_work_details(self.putcode)
         with pytest.raises(exceptions.TokenMismatchException):
             response.raise_for_result()
         assert not response.ok
 
     def test_invalid_orcid(self):
-        self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
+        self.orcid = 'INVALID-ORCID'
         response = self.client.get_work_details('12345')
         with pytest.raises(exceptions.OrcidInvalidException):
             response.raise_for_result()
@@ -215,8 +224,8 @@ class TestPostNewWork(BaseTestOrcidClient):
         assert not response.ok
 
     def test_invalid_token(self):
-        self.client = OrcidClient('invalidtoken', self.orcid)
-        response = self.client.post_new_work(self.xml_element)
+        client = OrcidClient('invalidtoken', self.orcid)
+        response = client.post_new_work(self.xml_element)
         with pytest.raises(exceptions.TokenInvalidException):
             response.raise_for_result()
         assert not response.ok
@@ -225,15 +234,14 @@ class TestPostNewWork(BaseTestOrcidClient):
         """
         A valid token, but related to another ORCID.
         """
-        orcid = '0000-0002-6665-4934'
-        self.client = OrcidClient(self.oauth_token, orcid)
+        self.orcid = '0000-0002-6665-4934'
         response = self.client.post_new_work(self.xml_element)
         with pytest.raises(exceptions.TokenMismatchException):
             response.raise_for_result()
         assert not response.ok
 
     def test_invalid_orcid(self):
-        self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
+        self.orcid = 'INVALID-ORCID'
         response = self.client.post_new_work(self.xml_element)
         with pytest.raises(exceptions.OrcidNotFoundException):
             response.raise_for_result()
@@ -337,8 +345,8 @@ class TestPutUpdatedWork(BaseTestOrcidClient):
         assert not response.ok
 
     def test_invalid_token(self):
-        self.client = OrcidClient('invalidtoken', self.orcid)
-        response = self.client.put_updated_work(self.xml_element, self.putcode)
+        client = OrcidClient('invalidtoken', self.orcid)
+        response = client.put_updated_work(self.xml_element, self.putcode)
         with pytest.raises(exceptions.TokenInvalidException):
             response.raise_for_result()
         assert not response.ok
@@ -353,15 +361,14 @@ class TestPutUpdatedWork(BaseTestOrcidClient):
         """
         A valid token, but related to another ORCID.
         """
-        orcid = '0000-0002-6665-4934'
-        self.client = OrcidClient(self.oauth_token, orcid)
+        self.orcid = '0000-0002-6665-4934'
         response = self.client.put_updated_work(self.xml_element, self.putcode)
         with pytest.raises(exceptions.TokenMismatchException):
             response.raise_for_result()
         assert not response.ok
 
     def test_invalid_orcid(self):
-        self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
+        self.orcid = 'INVALID-ORCID'
         response = self.client.put_updated_work(self.xml_element, self.putcode)
         with pytest.raises(exceptions.OrcidNotFoundException):
             response.raise_for_result()
@@ -422,8 +429,8 @@ class TestDeleteWork(BaseTestOrcidClient):
         assert not response.ok
 
     def test_invalid_token(self):
-        self.client = OrcidClient('invalidtoken', self.orcid)
-        response = self.client.delete_work(self.putcode)
+        client = OrcidClient('invalidtoken', self.orcid)
+        response = client.delete_work(self.putcode)
         with pytest.raises(exceptions.TokenInvalidException):
             response.raise_for_result()
         assert not response.ok
@@ -441,7 +448,7 @@ class TestDeleteWork(BaseTestOrcidClient):
         assert not response.ok
 
     def test_invalid_orcid(self):
-        self.client = OrcidClient(self.oauth_token, 'INVALID-ORCID')
+        self.orcid = 'INVALID-ORCID'
         response = self.client.delete_work(self.putcode)
         with pytest.raises(exceptions.OrcidNotFoundException):
             response.raise_for_result()
