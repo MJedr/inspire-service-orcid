@@ -97,7 +97,7 @@ class ExceedMaxNumberOfPutCodesException(BaseOrcidClientJsonException):
     }
 
 
-class WorkAlreadyExistentException(BaseOrcidClientJsonException):
+class WorkAlreadyExistsException(BaseOrcidClientJsonException):
     http_status_code = 409
     content = {
         'error-code': 9021

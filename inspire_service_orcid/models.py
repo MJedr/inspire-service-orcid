@@ -230,7 +230,7 @@ class PostNewWorkResponse(BaseOrcidClientResponse):
     A dict-like object as:
     {'location': 'http://api.orcid.org/orcid-api-web/v2.0/0000-0002-0942-3697/work/46964761', 'putcode': '46964761'}
     """
-    specific_exceptions = (exceptions.WorkAlreadyExistentException,
+    specific_exceptions = (exceptions.WorkAlreadyExistsException,
                            exceptions.InvalidDataException,
                            exceptions.OrcidNotFoundException,
                            exceptions.ExternalIdentifierRequiredException,)
