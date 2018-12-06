@@ -133,7 +133,7 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
     """  # noqa: E501
     specific_exceptions = (exceptions.OrcidNotFoundException,)
 
-    def get_putcodes_for_source(self, source_client_id_path):
+    def get_putcodes_for_source_iter(self, source_client_id_path):
         for summary in chain(*utils.smartget(self, 'group.work-summary', [])):
             source_client_id_dict = utils.smartget(summary, 'source.source-client-id.path')
             putcode = summary.get('put-code')
@@ -144,7 +144,7 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
             if source_client_id_dict == source_client_id_path:
                 yield str(putcode)
 
-    def get_putcodes_and_recids_for_source(self, source_client_id_path, external_id_url_regexp=r'.*inspire.*'):
+    def get_putcodes_and_recids_for_source_iter(self, source_client_id_path, external_id_url_regexp=r'.*inspire.*'):
         for summary in chain(*utils.smartget(self, 'group.work-summary', [])):
             source_client_id_dict = utils.smartget(summary, 'source.source-client-id.path')
             putcode = summary.get('put-code')
@@ -215,7 +215,7 @@ class GetBulkWorksDetailsResponse(GetWorkDetailsResponse):
                            exceptions.PutcodeNotFoundGetException,
                            exceptions.GenericGetWorksDetailsException,)
 
-    def get_putcodes_and_urls(self):
+    def get_putcodes_and_urls_iter(self):
         for item in utils.smartget(self, 'bulk'):
             putcode = utils.smartget(item, 'work.put-code')
             url = utils.smartget(item, 'work.url.value')

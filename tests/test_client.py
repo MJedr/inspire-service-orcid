@@ -59,7 +59,7 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         self.orcid = '0000-0002-6665-4934'  # ATLAS author with hundreds works.
         response = self.client.get_all_works_summary()
         response.raise_for_result()
-        putcodes = list(response.get_putcodes_for_source('0000-0001-8607-8906'))
+        putcodes = list(response.get_putcodes_for_source_iter('0000-0001-8607-8906'))
         assert len(putcodes) == 802
         assert putcodes[0] == '43326850'
         assert putcodes[-1] == '46478640'
@@ -69,7 +69,7 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         client = OrcidClient('mytoken', orcid)
         response = client.get_all_works_summary()
         response.raise_for_result()
-        putcodes = list(response.get_putcodes_for_source('0000-0001-8607-8906'))
+        putcodes = list(response.get_putcodes_for_source_iter('0000-0001-8607-8906'))
         assert len(putcodes) == 90
 
     def test_get_putcodes_and_recids_for_source(self):
@@ -78,7 +78,7 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         response.raise_for_result()
         assert response.ok
         expected = [('51341099', '20'), ('51341192', None)]
-        assert list(response.get_putcodes_and_recids_for_source('0000-0001-8607-8906')) == expected
+        assert list(response.get_putcodes_and_recids_for_source_iter('0000-0001-8607-8906')) == expected
 
     def test_get_putcodes_and_recids_for_source_no_recid(self):
         self.orcid = '0000-0002-5073-0816'
@@ -86,7 +86,7 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         response.raise_for_result()
         assert response.ok
         expected = [('51341099', None), ('51341192', None)]
-        assert list(response.get_putcodes_and_recids_for_source('0000-0001-8607-8906')) == expected
+        assert list(response.get_putcodes_and_recids_for_source_iter('0000-0001-8607-8906')) == expected
 
 
 class TestGetWorkDetails(BaseTestOrcidClient):
@@ -160,7 +160,7 @@ class TestGenerateGetBulkWorksDetails(object):
         for response in self.client.get_bulk_works_details_iter(self.putcodes):
             response.raise_for_result()
             assert response.ok
-            putcodes_and_urls = list(response.get_putcodes_and_urls())
+            putcodes_and_urls = list(response.get_putcodes_and_urls_iter())
             # Note: the recorded cassette returns the same result for each for loop.
             assert putcodes_and_urls[0] == ('43183518', 'http://inspirehep.net/record/1665234')
             assert putcodes_and_urls[-1] == ('44227246', 'http://inspirehep.net/record/1515025')

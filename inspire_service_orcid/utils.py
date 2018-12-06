@@ -66,7 +66,7 @@ def smartget_if(data, key, condition, default=None):
     return unfiltered_result if condition(unfiltered_result) else None
 
 
-def chunked_sequence(sequence, chunk_size):
+def chunked_sequence_iter(sequence, chunk_size):
     """
     Yield successive chunk_size sized chunks from sequence.
     """

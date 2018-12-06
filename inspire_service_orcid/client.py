@@ -121,7 +121,7 @@ class OrcidClient(object):
             raise ValueError('putcodes can not be an empty sequence')
 
         # Split the sequence in batches of 100 putcodes.
-        for putcodes_chunk in utils.chunked_sequence(putcodes, MAX_PUTCODES_PER_WORKS_DETAILS_REQUEST):
+        for putcodes_chunk in utils.chunked_sequence_iter(putcodes, MAX_PUTCODES_PER_WORKS_DETAILS_REQUEST):
             yield self._get_bulk_works_details(putcodes_chunk)
 
     @time_execution
