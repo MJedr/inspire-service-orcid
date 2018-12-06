@@ -424,7 +424,7 @@ class TestDeleteWork(BaseTestOrcidClient):
 
     def test_putcode_not_found(self):
         response = self.client.delete_work('0000')
-        with pytest.raises(exceptions.PutcodeNotFoundPutException):
+        with pytest.raises(exceptions.PutcodeNotFoundDeleteException):
             response.raise_for_result()
         assert not response.ok
 

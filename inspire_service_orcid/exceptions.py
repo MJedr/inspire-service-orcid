@@ -90,6 +90,13 @@ class PutcodeNotFoundPutException(BaseOrcidClientJsonException):
     }
 
 
+class PutcodeNotFoundDeleteException(BaseOrcidClientJsonException):
+    http_status_code = 404
+    content = {
+        'error-code': 9016
+    }
+
+
 class ExceedMaxNumberOfPutCodesException(BaseOrcidClientJsonException):
     http_status_code = 400
     content = {

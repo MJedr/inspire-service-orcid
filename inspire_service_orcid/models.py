@@ -310,5 +310,5 @@ class DeleteWorkResponse(BaseOrcidClientResponse):
     An empty dict-like object.
     """
     specific_exceptions = (exceptions.OrcidNotFoundException,
-                           exceptions.PutcodeNotFoundPutException,
+                           exceptions.PutcodeNotFoundDeleteException,
                            exceptions.TokenWithWrongPermissionException,)
