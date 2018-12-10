@@ -165,6 +165,13 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
 
             yield str(putcode), recid
 
+    def get_putcodes_and_external_identifiers_iter(self):
+        for group in self.get('group', []):
+            putcodes = utils.smartget(group, 'work-summary.put-code', [])
+            external_ids = utils.smartget(group, 'external-ids.external-id', [])
+            for putcode in putcodes:
+                yield putcode, external_ids
+
 
 class GetWorkDetailsResponse(BaseOrcidClientResponse):
     """

@@ -88,6 +88,64 @@ class TestGetAllWorksSummary(BaseTestOrcidClient):
         expected = [('51341099', None), ('51341192', None)]
         assert list(response.get_putcodes_and_recids_for_source_iter('0000-0001-8607-8906')) == expected
 
+    def test_get_putcodes_and_external_identifiers_iter(self):
+        response = self.client.get_all_works_summary()
+        response.raise_for_result()
+        expected = [
+            (46674246, [
+                {'external-id-relationship': 'SELF',
+                 'external-id-type': 'other-id',
+                 'external-id-url': {'value': 'http://inspireheptest.cern.ch/record/20'},
+                 'external-id-value': '20'},
+                {'external-id-value': '10.1000/test.orcid.push.https://labs.inspirehep.net',
+                 'external-id-relationship': 'SELF',
+                 'external-id-url': {'value': 'http://dx.doi.org/10.1000/test.orcid.push.https://labs.inspirehep.net'},
+                 'external-id-type': 'doi'}]
+             ),
+            (46694033, [
+                {'external-id-value': '10.1000/test.orcid.push.https://qa.inspirehep.net',
+                 'external-id-relationship': 'SELF',
+                 'external-id-url': {'value': 'http://dx.doi.org/10.1000/test.orcid.push.https://qa.inspirehep.net'},
+                 'external-id-type': 'doi'}]
+             )
+        ]
+        assert response.ok
+        assert list(response.get_putcodes_and_external_identifiers_iter()) == expected
+
+    def test_get_putcodes_and_external_identifiers_multiple_putcodes_in_a_work(self):
+        response = self.client.get_all_works_summary()
+        response.raise_for_result()
+        expected = [
+            (46674246, [
+                {'external-id-relationship': 'SELF',
+                 'external-id-type': 'other-id',
+                 'external-id-url': {'value': 'http://inspireheptest.cern.ch/record/20'},
+                 'external-id-value': '20'},
+                {'external-id-value': '10.1000/test.orcid.push.https://labs.inspirehep.net',
+                 'external-id-relationship': 'SELF',
+                 'external-id-url': {'value': 'http://dx.doi.org/10.1000/test.orcid.push.https://labs.inspirehep.net'},
+                 'external-id-type': 'doi'}]
+             ),
+            (999999, [
+                {'external-id-relationship': 'SELF',
+                 'external-id-type': 'other-id',
+                 'external-id-url': {'value': 'http://inspireheptest.cern.ch/record/20'},
+                 'external-id-value': '20'},
+                {'external-id-value': '10.1000/test.orcid.push.https://labs.inspirehep.net',
+                 'external-id-relationship': 'SELF',
+                 'external-id-url': {'value': 'http://dx.doi.org/10.1000/test.orcid.push.https://labs.inspirehep.net'},
+                 'external-id-type': 'doi'}]
+             ),
+            (46694033, [
+                {'external-id-value': '10.1000/test.orcid.push.https://qa.inspirehep.net',
+                 'external-id-relationship': 'SELF',
+                 'external-id-url': {'value': 'http://dx.doi.org/10.1000/test.orcid.push.https://qa.inspirehep.net'},
+                 'external-id-type': 'doi'}]
+             )
+        ]
+        assert response.ok
+        assert list(response.get_putcodes_and_external_identifiers_iter()) == expected
+
 
 class TestGetWorkDetails(BaseTestOrcidClient):
     def test_happy_flow(self):
