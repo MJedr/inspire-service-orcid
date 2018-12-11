@@ -126,7 +126,7 @@ class GetAllWorksSummaryResponse(BaseOrcidClientResponse):
                                             'title': {'value': 'IRRADIATION OF A CERIUM - CONTAINING SILICATE GLASS'},
                                             'translated-title': None},
                                   'type': 'JOURNAL_ARTICLE',
-                                  'visibility': 'PUBLIC'}]}
+                                  'visibility': 'LIMITED'}]}
               ],
      'last-modified-date': {'value': 1544010805177},
      'path': '/0000-0002-5073-0816/works'}
@@ -209,18 +209,28 @@ class GetWorkDetailsResponse(BaseOrcidClientResponse):
                                   'translated-title': None},
                         'type': 'JOURNAL_ARTICLE',
                         'url': {'value': 'http://labs.inspirehep.net/record/4328'},
-                        'visibility': 'PUBLIC'}}]}
+                        'visibility': 'PUBLIC'}
+               },
+               {'error': {'developer-message': '403 Forbidden: The item is private and you are not the source.',
+                          'error-code': 9013,
+                          'more-info': 'https://members.orcid.org/api/resources/troubleshooting',
+                          'response-code': 403,
+                          'user-message': 'The client application is forbidden to perform the action.'}
+               },
+             ]
+    }
     """  # noqa: E501
+    # An error in the list might is a work for which we have the putcode, but
+    # we have no access to it: so most likely the owner changed the visibility
+    # of the work after we got cached the putcode.
     specific_exceptions = (exceptions.OrcidInvalidException,
-                           exceptions.PutcodeNotFoundGetException,
-                           exceptions.GenericGetWorksDetailsException,)
+                           exceptions.PutcodeNotFoundGetException,)
 
 
 class GetBulkWorksDetailsResponse(GetWorkDetailsResponse):
     specific_exceptions = (exceptions.OrcidInvalidException,
                            exceptions.ExceedMaxNumberOfPutCodesException,
-                           exceptions.PutcodeNotFoundGetException,
-                           exceptions.GenericGetWorksDetailsException,)
+                           exceptions.PutcodeNotFoundGetException,)
 
     def get_putcodes_and_urls_iter(self):
         for item in utils.smartget(self, 'bulk'):

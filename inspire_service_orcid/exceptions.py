@@ -53,21 +53,6 @@ class OrcidInvalidException(BaseOrcidClientJsonException):
     }
 
 
-class GenericGetWorksDetailsException(BaseOrcidClientJsonException):
-    http_status_code = 200
-
-    @classmethod
-    def match(cls, response):
-        result = response.status_code == cls.http_status_code
-        if not result:
-            return False
-
-        for work in response.get('bulk', []):
-            if 'error' in work:
-                return True
-        return False
-
-
 class PutcodeNotFoundGetException(BaseOrcidClientJsonException):
     http_status_code = 200
 

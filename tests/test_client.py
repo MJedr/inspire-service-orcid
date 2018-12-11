@@ -223,6 +223,16 @@ class TestGenerateGetBulkWorksDetails(object):
             assert putcodes_and_urls[0] == ('43183518', 'http://inspirehep.net/record/1665234')
             assert putcodes_and_urls[-1] == ('44227246', 'http://inspirehep.net/record/1515025')
 
+    def test_single_work_error(self):
+        self.putcodes = ['51540408', '51496313']
+        result = []
+        for response in self.client.get_bulk_works_details_iter(self.putcodes):
+            response.raise_for_result()
+            assert response.ok
+            result += (list(response.get_putcodes_and_urls_iter()))
+
+        assert result == [('51496313', 'http://inspireheptest.cern.ch/record/20')]
+
 
 class TestPostNewWork(BaseTestOrcidClient):
     work_xml_data = """<?xml version="1.0" encoding="UTF-8"?>

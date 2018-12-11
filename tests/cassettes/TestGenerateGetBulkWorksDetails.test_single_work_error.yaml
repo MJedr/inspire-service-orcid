@@ -1,0 +1,124 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: [application/orcid+json]
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+    method: GET
+    uri: https://api.orcid.org/v2.0/0000-0002-6665-4934/works/51540408,51496313
+  response:
+    body: {string: !!python/unicode '
+{
+    "bulk": [
+        {
+            "work": {
+                "language-code": null,
+                "put-code": 51496313,
+                "contributors": {
+                    "contributor": [
+                        {
+                            "contributor-orcid": {
+                                "path": "0000-0002-5073-0816",
+                                "host": "orcid.org",
+                                "uri": "http://orcid.org/0000-0002-5073-0816"
+                            },
+                            "contributor-attributes": {
+                                "contributor-role": "AUTHOR",
+                                "contributor-sequence": "FIRST"
+                            },
+                            "credit-name": {
+                                "value": "J.J. Muray"
+                            },
+                            "contributor-email": null
+                        }
+                    ]
+                },
+                "last-modified-date": {
+                    "value": 1544536285863
+                },
+                "url": {
+                    "value": "http://inspireheptest.cern.ch/record/20"
+                },
+                "country": null,
+                "citation": {
+                    "citation-type": "BIBTEX",
+                    "citation-value": "@article{Muray:1963bp,\n    author = \"Muray, J.J.\",\n    reportNumber = \"SLAC-TN-63-050\",\n    doi = \"10.1000/PUBDB-2018-1000\",\n    title = \"IRRADIATION OF A CERIUM - CONTAINING SILICATE GLASS\",\n    url = \"http://www-public.slac.stanford.edu/sciDoc/docMeta.aspx?slacPubNumber=slac-tn-63-050\"\n}\n"
+                },
+                "external-ids": {
+                    "external-id": [
+                        {
+                            "external-id-relationship": "SELF",
+                            "external-id-value": "20",
+                            "external-id-url": {
+                                "value": "http://inspireheptest.cern.ch/record/20"
+                            },
+                            "external-id-type": "other-id"
+                        },
+                        {
+                            "external-id-relationship": "SELF",
+                            "external-id-value": "10.1000/PUBDB-2018-1000",
+                            "external-id-url": {
+                                "value": "http://dx.doi.org/10.1000/PUBDB-2018-1000"
+                            },
+                            "external-id-type": "doi"
+                        }
+                    ]
+                },
+                "created-date": {
+                    "value": 1544439221956
+                },
+                "visibility": "PUBLIC",
+                "source": {
+                    "source-client-id": {
+                        "path": "0000-0001-8607-8906",
+                        "host": "orcid.org",
+                        "uri": "http://orcid.org/client/0000-0001-8607-8906"
+                    },
+                    "source-name": {
+                        "value": "INSPIRE-HEP"
+                    },
+                    "source-orcid": null
+                },
+                "publication-date": null,
+                "title": {
+                    "translated-title": null,
+                    "subtitle": null,
+                    "title": {
+                        "value": "IRRADIATION OF A CERIUM - CONTAINING SILICATE GLASS"
+                    }
+                },
+                "journal-title": null,
+                "path": null,
+                "short-description": null,
+                "type": "JOURNAL_ARTICLE"
+            }
+        },
+        {
+            "error": {
+                "more-info": "https://members.orcid.org/api/resources/troubleshooting",
+                "error-code": 9013,
+                "response-code": 403,
+                "developer-message": "403 Forbidden: The item is private and you are not the source.",
+                "user-message": "The client application is forbidden to perform the action."
+            }
+        }
+    ]
+}
+    '}
+    headers:
+      access-control-allow-origin: ['*']
+      cache-control: ['no-cache, no-store, max-age=0, must-revalidate']
+      connection: [keep-alive]
+      content-length: ['2869']
+      content-type: [application/orcid+json; qs=2;charset=UTF-8]
+      date: ['Tue, 11 Dec 2018 13:57:48 GMT']
+      expires: ['0']
+      pragma: [no-cache]
+      server: [nginx/1.4.6 (Ubuntu)]
+      transfer-encoding: [chunked]
+      x-content-type-options: [nosniff]
+      x-frame-options: [DENY]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+version: 1
