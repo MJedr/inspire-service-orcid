@@ -220,9 +220,12 @@ class GetWorkDetailsResponse(BaseOrcidClientResponse):
              ]
     }
     """  # noqa: E501
-    # An error in the list might is a work for which we have the putcode, but
-    # we have no access to it: so most likely the owner changed the visibility
-    # of the work after we got cached the putcode.
+    # Note: works pushed by us but with private or limited visibility (the
+    # owner migh change the visibility at any time) are:
+    # - visibile with a get_all_works_summary() call
+    # - pushable with a put_updated_work()
+    # - NOT visible in get_work_details() and get_bulk_works_details_iter() calls.
+    # They ar replaced with an error section in such calls.
     specific_exceptions = (exceptions.OrcidInvalidException,
                            exceptions.PutcodeNotFoundGetException,)
 
