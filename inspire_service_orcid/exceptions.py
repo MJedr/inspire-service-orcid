@@ -126,3 +126,7 @@ class ExternalIdentifierRequiredException(BaseOrcidClientJsonException):
 
 class Generic400Exception(BaseOrcidClientJsonException):
     http_status_code = 400
+
+
+class MovedPermanentlyException(BaseOrcidClientJsonException):
+    http_status_code = 301
